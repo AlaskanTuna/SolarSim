@@ -341,9 +341,7 @@ export function usePanelState({
   }
 
   function deletePanel(panelId: string) {
-    const nextPanels = panelsRef.current.map((panel) =>
-      panel.id === panelId ? { ...panel, deleted: true } : panel
-    )
+    const nextPanels = panelsRef.current.map((panel) => (panel.id === panelId ? { ...panel, deleted: true } : panel))
     const nextVisibleCount = Math.max(minVisibleCount, visibleCountRef.current - 1)
     commitPanels(nextPanels)
     commitVisibleCount(nextVisibleCount)
@@ -352,9 +350,7 @@ export function usePanelState({
 
   function updatePanelEnergy(panelId: string, monthlyEnergyDcKwh: number[]) {
     // Energy refreshes are derived data from the backend recompute; not part of the undo history.
-    const next = panelsRef.current.map((panel) =>
-      panel.id === panelId ? { ...panel, monthlyEnergyDcKwh } : panel
-    )
+    const next = panelsRef.current.map((panel) => (panel.id === panelId ? { ...panel, monthlyEnergyDcKwh } : panel))
     commitPanels(next)
   }
 

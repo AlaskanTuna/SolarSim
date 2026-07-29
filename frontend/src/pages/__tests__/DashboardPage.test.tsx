@@ -85,7 +85,9 @@ describe('DashboardPage', () => {
 
     listProjectsMock.mockResolvedValue([])
     useAuthMock.mockReturnValue({ user: { id: 'u1', email: 'tester@example.com' } })
-    useQuotaMock.mockReturnValue({ data: { used: 0, limit: 5, resetsAt: new Date(Date.now() + 3600000).toISOString() } })
+    useQuotaMock.mockReturnValue({
+      data: { used: 0, limit: 5, resetsAt: new Date(Date.now() + 3600000).toISOString() }
+    })
   })
 
   // DP-01

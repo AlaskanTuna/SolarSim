@@ -59,11 +59,12 @@ function setupHappyPath() {
   latLngToPixelMock.mockReturnValue({ px: 100, py: 200 })
   metersToPixelsMock.mockReturnValueOnce(10).mockReturnValueOnce(18)
   getRotatedCornersMock.mockReturnValue([
-    [95, 191], [105, 191], [105, 209], [95, 209]
+    [95, 191],
+    [105, 191],
+    [105, 209],
+    [95, 209]
   ])
-  computeMonthlyEnergyMock.mockResolvedValue(
-    [30, 28, 31, 29, 32, 30, 33, 31, 30, 29, 27, 28]
-  )
+  computeMonthlyEnergyMock.mockResolvedValue([30, 28, 31, 29, 32, 30, 33, 31, 30, 29, 27, 28])
 }
 
 describe('recomputeSinglePanel', () => {

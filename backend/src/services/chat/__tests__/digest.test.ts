@@ -194,7 +194,9 @@ describe('renderProjectDigest', () => {
     expect(digest).toContain('### Monthly Breakdown')
     expect(digest).toContain('| Jan |')
     expect(digest).toContain('| Dec |')
-    const pipeLines = digest.split('\n').filter((line) => /^\| (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \|/.test(line))
+    const pipeLines = digest
+      .split('\n')
+      .filter((line) => /^\| (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \|/.test(line))
     expect(pipeLines).toHaveLength(12)
   })
 

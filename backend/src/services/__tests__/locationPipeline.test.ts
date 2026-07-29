@@ -20,8 +20,7 @@ vi.mock('../solarApiService.js', () => ({
   enrichBuildingInsights: (...args: unknown[]) => enrichBuildingInsightsMock(...args),
   // Delegate to globalThis.fetch so the existing fetch spies in this suite keep observing layer
   // downloads. Timeout is irrelevant in jsdom — the spy resolves synchronously before any timer fires.
-  fetchWithTimeout: (input: string | URL, _timeoutMs: number, init?: RequestInit) =>
-    globalThis.fetch(input, init),
+  fetchWithTimeout: (input: string | URL, _timeoutMs: number, init?: RequestInit) => globalThis.fetch(input, init),
   DOWNLOAD_TIMEOUT_MS: 45_000,
   PROBE_TIMEOUT_MS: 8_000,
   METADATA_TIMEOUT_MS: 20_000
@@ -73,9 +72,9 @@ describe('fetchLocationPipelineInputs', () => {
       monthlyFluxUrl: 'https://example.com/monthly'
     })
 
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(async () =>
-      new Response(new ArrayBuffer(8), { status: 200 })
-    )
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockImplementation(async () => new Response(new ArrayBuffer(8), { status: 200 }))
 
     const result = await fetchLocationPipelineInputs(3.14, 101.69, 'HIGH', false)
 
@@ -106,9 +105,9 @@ describe('fetchLocationPipelineInputs', () => {
       monthlyFluxUrl: 'https://example.com/monthly'
     })
 
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(async () =>
-      new Response(new ArrayBuffer(8), { status: 200 })
-    )
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockImplementation(async () => new Response(new ArrayBuffer(8), { status: 200 }))
 
     const result = await fetchLocationPipelineInputs(3.14, 101.69, 'HIGH', false)
 
@@ -130,9 +129,9 @@ describe('fetchLocationPipelineInputs', () => {
       monthlyFluxUrl: null
     })
 
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(async () =>
-      new Response(new ArrayBuffer(8), { status: 200 })
-    )
+    const fetchSpy = vi
+      .spyOn(globalThis, 'fetch')
+      .mockImplementation(async () => new Response(new ArrayBuffer(8), { status: 200 }))
 
     await fetchLocationPipelineInputs(3.14, 101.69, 'HIGH', false)
 
@@ -159,8 +158,6 @@ describe('fetchLocationPipelineInputs', () => {
       new Response(null, { status: 500, statusText: 'Internal Server Error' })
     )
 
-    await expect(fetchLocationPipelineInputs(3.14, 101.69, 'HIGH', false)).rejects.toThrow(
-      'Failed to download dsmUrl'
-    )
+    await expect(fetchLocationPipelineInputs(3.14, 101.69, 'HIGH', false)).rejects.toThrow('Failed to download dsmUrl')
   })
 })

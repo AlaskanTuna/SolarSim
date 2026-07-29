@@ -16,7 +16,9 @@ vi.mock('react-router-dom', async () => {
 })
 
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (k: string, opts?: Record<string, unknown>) => (opts ? `${k}:${JSON.stringify(opts)}` : k) })
+  useTranslation: () => ({
+    t: (k: string, opts?: Record<string, unknown>) => (opts ? `${k}:${JSON.stringify(opts)}` : k)
+  })
 }))
 
 vi.mock('@/api/projects', () => ({
@@ -37,7 +39,11 @@ vi.mock('@/components/analysis/ChartTooltipContent', () => ({
 }))
 
 vi.mock('@/components/dashboard/StatCard', () => ({
-  StatCard: ({ label, value }: { label: string; value: string }) => <div>{label}: {value}</div>
+  StatCard: ({ label, value }: { label: string; value: string }) => (
+    <div>
+      {label}: {value}
+    </div>
+  )
 }))
 
 vi.mock('@/components/dashboard/helpers', () => ({
@@ -116,9 +122,7 @@ describe('AnalyticsPage', () => {
 
   // AN-02
   it('renders the empty-state when all projects are still in progress', async () => {
-    listProjectsMock.mockResolvedValue([
-      { id: 'p1', name: 'WIP', status: 'layout_saved', analysisResults: null }
-    ])
+    listProjectsMock.mockResolvedValue([{ id: 'p1', name: 'WIP', status: 'layout_saved', analysisResults: null }])
     renderPage()
 
     await waitFor(() => expect(screen.getByText('analytics.noData.title')).toBeTruthy())
@@ -141,9 +145,7 @@ describe('AnalyticsPage', () => {
     ])
     renderPage()
 
-    await waitFor(() =>
-      expect(screen.getByText(/analytics\.subtitleWithCount/)).toBeTruthy()
-    )
+    await waitFor(() => expect(screen.getByText(/analytics\.subtitleWithCount/)).toBeTruthy())
   })
 
   // AN-04

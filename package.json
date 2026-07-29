@@ -18,7 +18,7 @@
     "db:seed": "pnpm exec prisma db seed --schema prisma/schema.prisma",
     "prisma:generate": "pnpm exec prisma generate --schema prisma/schema.prisma",
     "format": "prettier --write .",
-    "lint": "prettier --check package.json pnpm-workspace.yaml tsconfig.json frontend/tsconfig.json backend/tsconfig.json shared/package.json shared/tsconfig.json services/pdf-service/tsconfig.json",
+    "lint": "eslint . --max-warnings 68 && prettier --check .",
     "typecheck": "pnpm --filter @shared/types build && pnpm --filter backend exec tsc -p tsconfig.json --noEmit && pnpm --filter frontend exec tsc -p tsconfig.json --noEmit && pnpm --dir services/pdf-service exec tsc -p tsconfig.json --noEmit",
     "test": "pnpm --filter @shared/types build && pnpm --filter frontend test && pnpm --filter backend test",
     "build": "pnpm --filter @shared/types build && pnpm exec prisma generate --schema prisma/schema.prisma && pnpm --filter backend exec tsc -p tsconfig.json && pnpm --filter frontend build",
@@ -29,8 +29,14 @@
     "@prisma/client": "^6.6.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.0.0",
     "concurrently": "^9.1.2",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^16.0.0",
     "prettier": "^3.6.2",
-    "prisma": "^6.6.0"
+    "prisma": "^6.6.0",
+    "typescript-eslint": "^8.65.0"
   }
 }

@@ -72,10 +72,7 @@ export function PrivacyPage() {
           <ol className="grid gap-1 text-sm sm:grid-cols-2">
             {SECTION_ORDER.map((key, i) => (
               <li key={key}>
-                <a
-                  href={`#${key}`}
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
+                <a href={`#${key}`} className="text-muted-foreground transition-colors hover:text-foreground">
                   {i + 1}. {sections[key]?.title}
                 </a>
               </li>
