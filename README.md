@@ -304,7 +304,7 @@ The production stack is **two services**: a Heroku web dyno (frontend bundle + E
 > [!TIP]
 > The full deploy walkthrough — `heroku create`, every config var, custom domain attachment, Vercel link, CI/CD secrets, and post-deploy smoke tests — lives in **[RUNBOOK.md §7-§10](RUNBOOK.md)**. It's the canonical guide; this section is a one-screen reference for maintainers who already deployed once and just need a refresher.
 
-**Live deployment:**
+**Deployment Architecture:**
 
 - Frontend + API: <https://solarsim.tech> (Heroku dyno behind custom domain)
 - PDF render function: Vercel Hobby tier (URL set via `PDF_EXPORT_URL`)
