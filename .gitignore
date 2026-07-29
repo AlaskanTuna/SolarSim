@@ -193,3 +193,10 @@ temp/
 design-system/
 *.tsbuildinfo
 settings.local.json
+
+# Graphify knowledge graph (local build artifacts; only the queryable graph
+# and its human-readable report are committed)
+# ==========================================================================
+graphify-out/*
+!graphify-out/graph.json
+!graphify-out/GRAPH_REPORT.md
