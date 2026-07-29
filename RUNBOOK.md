@@ -77,14 +77,14 @@ vercel login
 
 Create these accounts before provisioning anything:
 
-| Provider | Purpose | Signup URL |
-| --- | --- | --- |
-| Supabase | Postgres, Auth, Storage | https://supabase.com |
+| Provider     | Purpose                                        | Signup URL                       |
+| ------------ | ---------------------------------------------- | -------------------------------- |
+| Supabase     | Postgres, Auth, Storage                        | https://supabase.com             |
 | Google Cloud | Solar API, Maps API, OAuth, optional Vertex AI | https://console.cloud.google.com |
-| Resend | Transactional email | https://resend.com |
-| Heroku | Backend deploy | https://heroku.com |
-| Vercel | PDF render function | https://vercel.com |
-| Porkbun | Domain registration / DNS | https://porkbun.com |
+| Resend       | Transactional email                            | https://resend.com               |
+| Heroku       | Backend deploy                                 | https://heroku.com               |
+| Vercel       | PDF render function                            | https://vercel.com               |
+| Porkbun      | Domain registration / DNS                      | https://porkbun.com              |
 
 ## 2. Clone and install
 
@@ -162,11 +162,11 @@ values ('geotiffs', 'geotiffs', false);
 
 Create a Resend API key, then verify your sender domain before testing with real users. For SolarSim, use `solarsim.tech` and send from `noreply@solarsim.tech`.
 
-| Type | Host | Value | TTL |
-| --- | --- | --- | --- |
-| TXT | `send` | `v=spf1 include:amazonses.com ~all` | 600 |
-| TXT | `resend._domainkey` | DKIM public key from Resend | 600 |
-| MX | `send` | `feedback-smtp.<region>.amazonses.com` (priority 10) | 600 |
+| Type | Host                | Value                                                | TTL |
+| ---- | ------------------- | ---------------------------------------------------- | --- |
+| TXT  | `send`              | `v=spf1 include:amazonses.com ~all`                  | 600 |
+| TXT  | `resend._domainkey` | DKIM public key from Resend                          | 600 |
+| MX   | `send`              | `feedback-smtp.<region>.amazonses.com` (priority 10) | 600 |
 
 [!WARNING]
 Porkbun auto-appends the domain suffix. Enter `send`, not `send.solarsim.tech`, or you will create the wrong record. For the apex, use ALIAS/ANAME if the registrar supports it; do not try to force a CNAME at the root.
@@ -188,13 +188,13 @@ heroku certs:auto:enable -a solar-layout-generator
 
 Porkbun DNS records should end up like this:
 
-| Record | Host | Value |
-| --- | --- | --- |
-| ALIAS (or ANAME) | apex / blank | `<apex-target>.herokudns.com` |
-| CNAME | `www` | `<www-target>.herokudns.com` |
-| TXT | `send` | Resend SPF record |
-| TXT | `resend._domainkey` | Resend DKIM record |
-| MX | `send` | Resend bounce MX record |
+| Record           | Host                | Value                         |
+| ---------------- | ------------------- | ----------------------------- |
+| ALIAS (or ANAME) | apex / blank        | `<apex-target>.herokudns.com` |
+| CNAME            | `www`               | `<www-target>.herokudns.com`  |
+| TXT              | `send`              | Resend SPF record             |
+| TXT              | `resend._domainkey` | Resend DKIM record            |
+| MX               | `send`              | Resend bounce MX record       |
 
 [!NOTE]
 Keep the Heroku DNS targets separate from the Resend sender records. They live on different subdomains and do not conflict.
@@ -205,34 +205,34 @@ Keep the Heroku DNS targets separate from the Resend sender records. They live o
 
 Set the root `.env` from the table below. `VITE_*` variables are baked into the frontend bundle at build time, so they must be correct before the first Heroku deploy.
 
-| Variable | Where the value comes from | What breaks if missing |
-| --- | --- | --- |
-| `GOOGLE_API_KEY` | GCP API key restricted to Solar, Maps, and Geocoding APIs | Roof lookup, map tiles, and Solar API calls fail |
-| `VITE_GOOGLE_API_KEY` | `GOOGLE_API_KEY` via dotenv-expand | Frontend Google Maps JS loader fails |
-| `GOOGLE_CLOUD_PROJECT` | GCP project ID, e.g. `solar-layout-generator` | Vertex AI chat path cannot start |
-| `GOOGLE_CLOUD_LOCATION` | Usually `global` | Vertex AI requests target the wrong region |
-| `GEMINI_API_KEY` | Google AI Studio API key | Sol has no fallback chat auth |
-| `CHAT_MODEL` | Gemini model name | Chat boots with the wrong or default model |
-| `GOOGLE_OAUTH_CLIENT_ID` | GCP OAuth client | Google sign-in fails |
-| `GOOGLE_OAUTH_SECRET` | Same OAuth client | Google sign-in fails |
-| `SUPABASE_URL` | Supabase Settings -> API | Auth, storage, and backend client creation fail |
-| `SUPABASE_ANON_KEY` | Supabase Settings -> API | Frontend Supabase client cannot sign in |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Settings -> API | Backend cannot read/write privileged data |
-| `SUPABASE_DATABASE_URL` | Supabase Settings -> Database | Prisma migrations and runtime DB access fail |
-| `VITE_SUPABASE_URL` | `SUPABASE_URL` via dotenv-expand | Frontend Supabase client cannot boot |
-| `VITE_SUPABASE_ANON_KEY` | `SUPABASE_ANON_KEY` via dotenv-expand | Frontend auth fails |
-| `SITE_URL` | Final public origin, local or production | Supabase redirect links point to the wrong place |
-| `APEX_DOMAIN` | `solarsim.tech` in production, blank elsewhere | Apex redirect middleware does not activate |
-| `BACKEND_PORT` | Local dev only, usually `3001` | Local backend starts on the wrong port |
-| `FRONTEND_PORT` | Local dev only, usually `5173` | Local frontend starts on the wrong port |
-| `FRONTEND_URL` | Local `http://localhost:5173`, prod `https://solarsim.tech` | Backend CORS rejects browser requests |
-| `PDF_TOKEN_SECRET` | `openssl rand -hex 32` | PDF token signing and verification fail |
-| `PDF_EXPORT_URL` | Vercel PDF function URL | Analysis page export button points nowhere |
-| `VITE_PDF_EXPORT_URL` | `PDF_EXPORT_URL` via dotenv-expand | Frontend bundle cannot call the PDF service |
-| `RESEND_API_KEY` | Resend API key | Supabase auth email delivery fails |
-| `PORT` | Heroku runtime injection | Do not set manually; Heroku supplies it |
-| `NODE_ENV` | `production` on Heroku, `development` locally | Redirect middleware and prod behavior diverge |
-| `ALLOWED_FRONTEND_ORIGIN` | Vercel env var for the PDF service | PDF function rejects browser requests |
+| Variable                    | Where the value comes from                                  | What breaks if missing                           |
+| --------------------------- | ----------------------------------------------------------- | ------------------------------------------------ |
+| `GOOGLE_API_KEY`            | GCP API key restricted to Solar, Maps, and Geocoding APIs   | Roof lookup, map tiles, and Solar API calls fail |
+| `VITE_GOOGLE_API_KEY`       | `GOOGLE_API_KEY` via dotenv-expand                          | Frontend Google Maps JS loader fails             |
+| `GOOGLE_CLOUD_PROJECT`      | GCP project ID, e.g. `solar-layout-generator`               | Vertex AI chat path cannot start                 |
+| `GOOGLE_CLOUD_LOCATION`     | Usually `global`                                            | Vertex AI requests target the wrong region       |
+| `GEMINI_API_KEY`            | Google AI Studio API key                                    | Sol has no fallback chat auth                    |
+| `CHAT_MODEL`                | Gemini model name                                           | Chat boots with the wrong or default model       |
+| `GOOGLE_OAUTH_CLIENT_ID`    | GCP OAuth client                                            | Google sign-in fails                             |
+| `GOOGLE_OAUTH_SECRET`       | Same OAuth client                                           | Google sign-in fails                             |
+| `SUPABASE_URL`              | Supabase Settings -> API                                    | Auth, storage, and backend client creation fail  |
+| `SUPABASE_ANON_KEY`         | Supabase Settings -> API                                    | Frontend Supabase client cannot sign in          |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Settings -> API                                    | Backend cannot read/write privileged data        |
+| `SUPABASE_DATABASE_URL`     | Supabase Settings -> Database                               | Prisma migrations and runtime DB access fail     |
+| `VITE_SUPABASE_URL`         | `SUPABASE_URL` via dotenv-expand                            | Frontend Supabase client cannot boot             |
+| `VITE_SUPABASE_ANON_KEY`    | `SUPABASE_ANON_KEY` via dotenv-expand                       | Frontend auth fails                              |
+| `SITE_URL`                  | Final public origin, local or production                    | Supabase redirect links point to the wrong place |
+| `APEX_DOMAIN`               | `solarsim.tech` in production, blank elsewhere              | Apex redirect middleware does not activate       |
+| `BACKEND_PORT`              | Local dev only, usually `3001`                              | Local backend starts on the wrong port           |
+| `FRONTEND_PORT`             | Local dev only, usually `5173`                              | Local frontend starts on the wrong port          |
+| `FRONTEND_URL`              | Local `http://localhost:5173`, prod `https://solarsim.tech` | Backend CORS rejects browser requests            |
+| `PDF_TOKEN_SECRET`          | `openssl rand -hex 32`                                      | PDF token signing and verification fail          |
+| `PDF_EXPORT_URL`            | Vercel PDF function URL                                     | Analysis page export button points nowhere       |
+| `VITE_PDF_EXPORT_URL`       | `PDF_EXPORT_URL` via dotenv-expand                          | Frontend bundle cannot call the PDF service      |
+| `RESEND_API_KEY`            | Resend API key                                              | Supabase auth email delivery fails               |
+| `PORT`                      | Heroku runtime injection                                    | Do not set manually; Heroku supplies it          |
+| `NODE_ENV`                  | `production` on Heroku, `development` locally               | Redirect middleware and prod behavior diverge    |
+| `ALLOWED_FRONTEND_ORIGIN`   | Vercel env var for the PDF service                          | PDF function rejects browser requests            |
 
 [!NOTE]
 The repo also contains commented Supabase config hooks for optional keys such as `OPENAI_API_KEY` and S3-related variables. They are not needed for the SolarSim production path described here.
@@ -443,7 +443,7 @@ heroku certs:auto -a solar-layout-generator
 
 If renewal ever fails, inspect the DNS targets first and make sure the ACME challenge path is not being redirected away from Heroku.
 
-### 11.5 Rebuilding after VITE_* env var changes (empty commit trick)
+### 11.5 Rebuilding after VITE\_\* env var changes (empty commit trick)
 
 Any change to `VITE_GOOGLE_API_KEY`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, or `VITE_PDF_EXPORT_URL` requires a fresh frontend build. The fastest safe path is an empty commit:
 
@@ -457,23 +457,23 @@ If you skip the rebuild, Heroku will keep serving the old bundle and the browser
 
 ## 12. Troubleshooting
 
-| Symptom | Cause | Fix |
-| --- | --- | --- |
-| Signup succeeds, but no email arrives | Resend domain unverified or `RESEND_API_KEY` invalid | Check Resend logs, confirm the SPF/DKIM/MX records, then re-run `supabase config push` |
-| Resend returns `403 Testing domain restriction` | Still using `onboarding@resend.dev` for arbitrary recipients | Verify `solarsim.tech` in Resend and switch `admin_email` to `noreply@solarsim.tech` |
-| `supabase config push` shows an empty SMTP password | `.env` was not sourced before the push | Re-run `set -a && source .env && set +a && yes | supabase config push` |
-| Local backend refuses to boot with a chat auth error | Neither `GEMINI_API_KEY` nor `GOOGLE_CLOUD_PROJECT` is set | Add at least one of them to `.env` |
-| Heroku app loads at `herokuapp.com` but not the custom domain | DNS targets are wrong or TLS is still provisioning | Re-check `heroku domains -a ...`, then update Porkbun and wait for ACM |
-| Requests bounce between `www.solarsim.tech` and the apex forever | `APEX_DOMAIN`, `SITE_URL`, or `FRONTEND_URL` do not match the canonical host | Set all three to `https://solarsim.tech` and redeploy |
-| PDF export returns `500 Server misconfigured: ALLOWED_FRONTEND_ORIGIN unset` | Vercel env var missing | Set `ALLOWED_FRONTEND_ORIGIN` with `vercel env add` and redeploy |
-| PDF export returns `403 CORS rejected` | Frontend origin in Vercel does not exactly match the browser origin | Re-set `ALLOWED_FRONTEND_ORIGIN` to the exact production origin, no trailing slash |
-| PDF export button still points at the placeholder URL | `PDF_EXPORT_URL` changed after the frontend build | Update Heroku config and trigger the empty-commit rebuild |
-| Chat returns `409` immediately | The project location is still processing | Wait for the location to finish resolving before opening chat |
-| Chat ends with `service_unavailable` | Gemini or Vertex AI stayed on `503` after retries | Retry later; the backend already exhausted its retries |
-| Heroku release fails on migration | A Prisma migration is broken or the DB URL is wrong | Inspect `heroku logs --tail`, fix the migration locally, then redeploy |
-| OAuth sign-in redirects to localhost in production | `SITE_URL` or Supabase redirect config is stale | Update `.env`, push Supabase config, then redeploy Heroku |
-| Sign-in works locally but not on Heroku | `FRONTEND_URL` is not the production origin | Set `FRONTEND_URL=https://solarsim.tech` and redeploy |
-| `dig` shows no DNS change after updating Porkbun | DNS propagation lag or record typed incorrectly | Re-check the host fields, then wait and query again |
+| Symptom                                                                      | Cause                                                                        | Fix                                                                                    |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
+| Signup succeeds, but no email arrives                                        | Resend domain unverified or `RESEND_API_KEY` invalid                         | Check Resend logs, confirm the SPF/DKIM/MX records, then re-run `supabase config push` |
+| Resend returns `403 Testing domain restriction`                              | Still using `onboarding@resend.dev` for arbitrary recipients                 | Verify `solarsim.tech` in Resend and switch `admin_email` to `noreply@solarsim.tech`   |
+| `supabase config push` shows an empty SMTP password                          | `.env` was not sourced before the push                                       | Re-run `set -a && source .env && set +a && yes \| supabase config push`                |
+| Local backend refuses to boot with a chat auth error                         | Neither `GEMINI_API_KEY` nor `GOOGLE_CLOUD_PROJECT` is set                   | Add at least one of them to `.env`                                                     |
+| Heroku app loads at `herokuapp.com` but not the custom domain                | DNS targets are wrong or TLS is still provisioning                           | Re-check `heroku domains -a ...`, then update Porkbun and wait for ACM                 |
+| Requests bounce between `www.solarsim.tech` and the apex forever             | `APEX_DOMAIN`, `SITE_URL`, or `FRONTEND_URL` do not match the canonical host | Set all three to `https://solarsim.tech` and redeploy                                  |
+| PDF export returns `500 Server misconfigured: ALLOWED_FRONTEND_ORIGIN unset` | Vercel env var missing                                                       | Set `ALLOWED_FRONTEND_ORIGIN` with `vercel env add` and redeploy                       |
+| PDF export returns `403 CORS rejected`                                       | Frontend origin in Vercel does not exactly match the browser origin          | Re-set `ALLOWED_FRONTEND_ORIGIN` to the exact production origin, no trailing slash     |
+| PDF export button still points at the placeholder URL                        | `PDF_EXPORT_URL` changed after the frontend build                            | Update Heroku config and trigger the empty-commit rebuild                              |
+| Chat returns `409` immediately                                               | The project location is still processing                                     | Wait for the location to finish resolving before opening chat                          |
+| Chat ends with `service_unavailable`                                         | Gemini or Vertex AI stayed on `503` after retries                            | Retry later; the backend already exhausted its retries                                 |
+| Heroku release fails on migration                                            | A Prisma migration is broken or the DB URL is wrong                          | Inspect `heroku logs --tail`, fix the migration locally, then redeploy                 |
+| OAuth sign-in redirects to localhost in production                           | `SITE_URL` or Supabase redirect config is stale                              | Update `.env`, push Supabase config, then redeploy Heroku                              |
+| Sign-in works locally but not on Heroku                                      | `FRONTEND_URL` is not the production origin                                  | Set `FRONTEND_URL=https://solarsim.tech` and redeploy                                  |
+| `dig` shows no DNS change after updating Porkbun                             | DNS propagation lag or record typed incorrectly                              | Re-check the host fields, then wait and query again                                    |
 
 ## 13. Tearing down
 
@@ -496,45 +496,45 @@ Supabase project deletion is still dashboard-only. After deleting the hosted pro
 
 ## Appendix A: env var reference card
 
-| Variable | Source | Notes |
-| --- | --- | --- |
-| `GOOGLE_API_KEY` | GCP API key | Solar API + Maps + Geocoding |
-| `VITE_GOOGLE_API_KEY` | Derived from `GOOGLE_API_KEY` | Frontend map loader |
-| `GOOGLE_CLOUD_PROJECT` | GCP project ID | Vertex AI chat path |
-| `GOOGLE_CLOUD_LOCATION` | Usually `global` | Vertex AI region |
-| `GEMINI_API_KEY` | Google AI Studio | Chat fallback |
-| `CHAT_MODEL` | Gemini model name | Chat model selector |
-| `GOOGLE_OAUTH_CLIENT_ID` | GCP OAuth client | Google sign-in |
-| `GOOGLE_OAUTH_SECRET` | GCP OAuth client | Google sign-in |
-| `SUPABASE_URL` | Supabase settings | Backend + auth |
-| `SUPABASE_ANON_KEY` | Supabase settings | Frontend auth |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase settings | Backend privileged access |
-| `SUPABASE_DATABASE_URL` | Supabase DB connection string | Prisma |
-| `VITE_SUPABASE_URL` | Derived from `SUPABASE_URL` | Frontend auth |
-| `VITE_SUPABASE_ANON_KEY` | Derived from `SUPABASE_ANON_KEY` | Frontend auth |
-| `SITE_URL` | Final public origin | Supabase auth redirects |
-| `APEX_DOMAIN` | `solarsim.tech` | Apex redirect middleware |
-| `BACKEND_PORT` | Local only | Backend dev port |
-| `FRONTEND_PORT` | Local only | Frontend dev port |
-| `FRONTEND_URL` | Local or production origin | Backend CORS |
-| `PDF_TOKEN_SECRET` | `openssl rand -hex 32` | PDF token signing |
-| `PDF_EXPORT_URL` | Vercel function URL | PDF export endpoint |
-| `VITE_PDF_EXPORT_URL` | Derived from `PDF_EXPORT_URL` | Frontend export URL |
-| `RESEND_API_KEY` | Resend API key | Supabase SMTP |
-| `PORT` | Heroku runtime | Do not set by hand |
-| `NODE_ENV` | Runtime / Heroku config | Production mode |
-| `ALLOWED_FRONTEND_ORIGIN` | Vercel env | PDF function CORS allowlist |
+| Variable                    | Source                           | Notes                        |
+| --------------------------- | -------------------------------- | ---------------------------- |
+| `GOOGLE_API_KEY`            | GCP API key                      | Solar API + Maps + Geocoding |
+| `VITE_GOOGLE_API_KEY`       | Derived from `GOOGLE_API_KEY`    | Frontend map loader          |
+| `GOOGLE_CLOUD_PROJECT`      | GCP project ID                   | Vertex AI chat path          |
+| `GOOGLE_CLOUD_LOCATION`     | Usually `global`                 | Vertex AI region             |
+| `GEMINI_API_KEY`            | Google AI Studio                 | Chat fallback                |
+| `CHAT_MODEL`                | Gemini model name                | Chat model selector          |
+| `GOOGLE_OAUTH_CLIENT_ID`    | GCP OAuth client                 | Google sign-in               |
+| `GOOGLE_OAUTH_SECRET`       | GCP OAuth client                 | Google sign-in               |
+| `SUPABASE_URL`              | Supabase settings                | Backend + auth               |
+| `SUPABASE_ANON_KEY`         | Supabase settings                | Frontend auth                |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase settings                | Backend privileged access    |
+| `SUPABASE_DATABASE_URL`     | Supabase DB connection string    | Prisma                       |
+| `VITE_SUPABASE_URL`         | Derived from `SUPABASE_URL`      | Frontend auth                |
+| `VITE_SUPABASE_ANON_KEY`    | Derived from `SUPABASE_ANON_KEY` | Frontend auth                |
+| `SITE_URL`                  | Final public origin              | Supabase auth redirects      |
+| `APEX_DOMAIN`               | `solarsim.tech`                  | Apex redirect middleware     |
+| `BACKEND_PORT`              | Local only                       | Backend dev port             |
+| `FRONTEND_PORT`             | Local only                       | Frontend dev port            |
+| `FRONTEND_URL`              | Local or production origin       | Backend CORS                 |
+| `PDF_TOKEN_SECRET`          | `openssl rand -hex 32`           | PDF token signing            |
+| `PDF_EXPORT_URL`            | Vercel function URL              | PDF export endpoint          |
+| `VITE_PDF_EXPORT_URL`       | Derived from `PDF_EXPORT_URL`    | Frontend export URL          |
+| `RESEND_API_KEY`            | Resend API key                   | Supabase SMTP                |
+| `PORT`                      | Heroku runtime                   | Do not set by hand           |
+| `NODE_ENV`                  | Runtime / Heroku config          | Production mode              |
+| `ALLOWED_FRONTEND_ORIGIN`   | Vercel env                       | PDF function CORS allowlist  |
 
 ## Appendix B: Glossary of CLIs
 
-| CLI | Meaning |
-| --- | --- |
+| CLI        | Meaning                                                 |
+| ---------- | ------------------------------------------------------- |
 | `supabase` | Manages hosted Supabase auth, config, and project links |
-| `gcloud` | Manages Google Cloud projects, APIs, and credentials |
-| `gh` | GitHub CLI for secrets, PRs, and workflow inspection |
-| `heroku` | Manages the backend app, config vars, domains, and logs |
-| `vercel` | Deploys and configures the PDF function |
-| `dig` | Queries DNS records from the terminal |
-| `openssl` | Generates secure random secrets and checks TLS |
+| `gcloud`   | Manages Google Cloud projects, APIs, and credentials    |
+| `gh`       | GitHub CLI for secrets, PRs, and workflow inspection    |
+| `heroku`   | Manages the backend app, config vars, domains, and logs |
+| `vercel`   | Deploys and configures the PDF function                 |
+| `dig`      | Queries DNS records from the terminal                   |
+| `openssl`  | Generates secure random secrets and checks TLS          |
 
 Last verified: 03/05/26 (against main @ <replace-with-current-sha>)

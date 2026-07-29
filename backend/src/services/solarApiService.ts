@@ -29,11 +29,7 @@ export const DOWNLOAD_TIMEOUT_MS = 45_000
  * named timeout error so callers see something readable in logs and don't have
  * to do their own AbortError detection.
  */
-export async function fetchWithTimeout(
-  input: string | URL,
-  timeoutMs: number,
-  init?: RequestInit
-): Promise<Response> {
+export async function fetchWithTimeout(input: string | URL, timeoutMs: number, init?: RequestInit): Promise<Response> {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), timeoutMs)
   try {

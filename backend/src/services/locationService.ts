@@ -85,8 +85,7 @@ export async function resolveLocation(
 
   if (existing) {
     const isStaleProcessing =
-      existing.status === 'processing' &&
-      Date.now() - existing.createdAt.getTime() > STALE_PROCESSING_THRESHOLD_MS
+      existing.status === 'processing' && Date.now() - existing.createdAt.getTime() > STALE_PROCESSING_THRESHOLD_MS
 
     if (isStaleProcessing) {
       const ageMs = Date.now() - existing.createdAt.getTime()

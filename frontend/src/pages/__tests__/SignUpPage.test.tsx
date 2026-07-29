@@ -94,7 +94,11 @@ describe('SignUpPage', () => {
   it('disables the submit button while the request is in flight', async () => {
     setAuth()
     let resolveFn: (value: { error: null }) => void = () => undefined
-    signUpMock.mockReturnValue(new Promise((r) => { resolveFn = r }))
+    signUpMock.mockReturnValue(
+      new Promise((r) => {
+        resolveFn = r
+      })
+    )
 
     renderPage()
 

@@ -42,6 +42,9 @@ _Search a roof. Tweak the layout. Get a NEM-accurate savings report. As easy as 
 > [!NOTE]
 > SolarSim is an **assessment** tool. It produces an estimate report, not a quotation, not a contract, and not an installation order. Final pricing and feasibility always come from a licensed Malaysian installer.
 
+> [!WARNING]
+> **The live deployment is currently offline.** The Supabase project backing `solarsim.tech` is paused pending a database provider migration (tracked in open issues). Everything below still describes the shipped product — clone it and run the local quickstart to see it working.
+
 ---
 
 ## ✨ At a Glance
@@ -301,7 +304,7 @@ The production stack is **two services**: a Heroku web dyno (frontend bundle + E
 > [!TIP]
 > The full deploy walkthrough — `heroku create`, every config var, custom domain attachment, Vercel link, CI/CD secrets, and post-deploy smoke tests — lives in **[RUNBOOK.md §7-§10](RUNBOOK.md)**. It's the canonical guide; this section is a one-screen reference for maintainers who already deployed once and just need a refresher.
 
-**Live deployment:**
+**Deployment Architecture:**
 
 - Frontend + API: <https://solarsim.tech> (Heroku dyno behind custom domain)
 - PDF render function: Vercel Hobby tier (URL set via `PDF_EXPORT_URL`)
@@ -329,6 +332,15 @@ The production stack is **two services**: a Heroku web dyno (frontend bundle + E
 - ⚖ **Layout Boundary.** The Workbench plans where panels could go, not whether they should. Purlin spacing, MCB sizing, inverter placement, and roof-load calculations are out of scope and remain the installer's responsibility.
 - 🔑 **Data Ownership.** Supabase Row-Level Security scopes every project to its owner. Account deletion cascades and removes the user's projects, cached imagery, and saved analyses.
 - 🛡 **PDF Token Security.** PDF exports use signed tokens that expire in 60 seconds and are scoped to a single project, so leaked URLs cannot be replayed by anyone else.
+
+---
+
+## 🧭 Known Limitations
+
+- **Panel placement is approximate.** The Google Solar API derives suggested panel positions from flux heuristics, not true roof-edge segmentation, so a layout occasionally doesn't align cleanly with the actual roof. This is a permanent trade-off rather than an open bug — closing the gap properly would take ML-based roof segmentation or constrained re-optimisation against the roof mask, both research-grade efforts outside this project's scope. The Workbench's drag-and-snap editing exists precisely for this: move a panel and it snaps flush against its neighbours.
+- **Solar API coverage is uneven across Malaysia.** Some addresses, including parts of the Klang Valley, have thin or missing `HIGH`-quality imagery. SolarSim probes for the best available quality before committing to a location and falls back to `BASE` imagery with expanded coverage where possible, surfaced in the UI as an amber "Imagery: BASE" badge — lower-resolution imagery means less precise flux sampling and panel placement.
+- **NEM billing is an estimate, not a utility quote.** The billing engine simulates NEM Rakyat 3.0 self-consumption and export against seeded TNB RP4 tariffs (with EEI, AFA, SST, and RE Fund adjustments). Multi-year Lifecycle projections apply a configurable tariff escalation rate that defaults to 0% — future TNB rate revisions aren't predicted, only modelled if you choose to set one.
+- **Mobile and touch testing is deferred.** The Konva canvas, sidebar, and panel drawer have been verified on desktop and browser devtools emulation, not on real mobile devices. Tracked as an open item.
 
 ---
 

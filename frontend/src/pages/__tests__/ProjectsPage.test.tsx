@@ -18,7 +18,9 @@ vi.mock('react-router-dom', async () => {
 })
 
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (k: string, opts?: Record<string, unknown>) => (opts ? `${k}:${JSON.stringify(opts)}` : k) })
+  useTranslation: () => ({
+    t: (k: string, opts?: Record<string, unknown>) => (opts ? `${k}:${JSON.stringify(opts)}` : k)
+  })
 }))
 
 vi.mock('@/api/projects', () => ({
@@ -46,7 +48,9 @@ vi.mock('@/components/dashboard/ProjectCard', () => ({
   ProjectCard: ({ project, onDelete }: { project: { id: string; name: string }; onDelete: () => void }) => (
     <div data-testid={`project-card-${project.id}`}>
       <span>{project.name}</span>
-      <button type="button" onClick={onDelete}>delete</button>
+      <button type="button" onClick={onDelete}>
+        delete
+      </button>
     </div>
   )
 }))
@@ -78,7 +82,9 @@ describe('ProjectsPage', () => {
     deleteProjectMock.mockReset()
     useQuotaMock.mockReset()
 
-    useQuotaMock.mockReturnValue({ data: { used: 1, limit: 5, resetsAt: new Date(Date.now() + 3600000).toISOString() } })
+    useQuotaMock.mockReturnValue({
+      data: { used: 1, limit: 5, resetsAt: new Date(Date.now() + 3600000).toISOString() }
+    })
   })
 
   // PP-01

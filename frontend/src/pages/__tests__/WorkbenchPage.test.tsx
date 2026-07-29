@@ -44,7 +44,9 @@ vi.mock('react-router-dom', async () => {
 })
 
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({ t: (k: string, opts?: Record<string, unknown>) => (opts ? `${k}:${JSON.stringify(opts)}` : k) })
+  useTranslation: () => ({
+    t: (k: string, opts?: Record<string, unknown>) => (opts ? `${k}:${JSON.stringify(opts)}` : k)
+  })
 }))
 
 vi.mock('react-konva', () => ({
@@ -194,8 +196,13 @@ vi.mock('@/components/ui/LoadingOverlay', () => ({ LoadingOverlay: () => <div>lo
 vi.mock('@/components/ui/GuidedTour', () => ({ GuidedTour: () => null }))
 vi.mock('@/components/workbench/CanvasControls', () => ({ CanvasControls: () => null }))
 vi.mock('@/components/workbench/CanvasLegends', () => ({ CanvasLegends: () => null }))
-vi.mock('@/components/workbench/WorkbenchSidebar', () => ({ WorkbenchSidebar: () => <aside data-testid="workbench-sidebar" /> }))
-vi.mock('@/components/workbench/LayoutPresetModal', () => ({ LayoutPresetModal: ({ open }: { open: boolean }) => (open ? <div data-testid="layout-preset-modal">preset</div> : null) }))
+vi.mock('@/components/workbench/WorkbenchSidebar', () => ({
+  WorkbenchSidebar: () => <aside data-testid="workbench-sidebar" />
+}))
+vi.mock('@/components/workbench/LayoutPresetModal', () => ({
+  LayoutPresetModal: ({ open }: { open: boolean }) =>
+    open ? <div data-testid="layout-preset-modal">preset</div> : null
+}))
 vi.mock('@/components/workbench/WorkbenchHintOverlay', () => ({ WorkbenchHintOverlay: () => null }))
 vi.mock('@/components/workbench/PanelLayer', () => ({ PanelLayer: () => null }))
 vi.mock('@/components/workbench/IrradianceGlow', () => ({
@@ -204,7 +211,12 @@ vi.mock('@/components/workbench/IrradianceGlow', () => ({
 }))
 
 vi.mock('@/components/chat/ChatProvider', () => {
-  const ctx = React.createContext({ getState: () => ({ isOpen: false }), setState: vi.fn(), reset: vi.fn(), isAnyOpen: false })
+  const ctx = React.createContext({
+    getState: () => ({ isOpen: false }),
+    setState: vi.fn(),
+    reset: vi.fn(),
+    isAnyOpen: false
+  })
   return { ChatContext: ctx, ChatProvider: ({ children }: React.PropsWithChildren) => <div>{children}</div> }
 })
 
