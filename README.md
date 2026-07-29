@@ -402,6 +402,10 @@ SolarSim/
 
 </details>
 
+### Documentation Hygiene
+
+`graphify-out/graph.json` and `graphify-out/GRAPH_REPORT.md` are a generated knowledge graph of this codebase, committed so contributors don't have to rebuild it — do not hand-edit them. Refresh after code changes with `graphify update .` (code-only, no LLM, free). A change that deletes a lot of source can trip its shrink guard; re-run with `--force` if that happens.
+
 ---
 
 <div align="center">
