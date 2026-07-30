@@ -1,7 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CHAT_SEND_COOLDOWN_MS, ChatContext, type ChatMessage } from '@/components/chat/ChatProvider'
-import { getSupabase } from '@/lib/supabase'
 import type { AnalysisResultsDto, LayoutPreferences, PanelEdit, StoredAnalysisConfigDto } from '@shared/types'
 
 /** How many follow-up chips to render per model bubble, sampled from the page-specific pool. */
@@ -71,20 +70,6 @@ function drainSseBuffer(buffer: string): { events: ChatEvent[]; remaining: strin
     events.push(...parseSseEventBlock(rawEvent))
   }
   return { events, remaining }
-}
-
-/** Builds JSON + Bearer-auth headers from the current Supabase session, if any. */
-async function buildAuthHeaders(): Promise<Record<string, string>> {
-  const supabase = getSupabase()
-  const {
-    data: { session }
-  } = await supabase.auth.getSession()
-
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-  if (session?.access_token) {
-    headers.Authorization = `Bearer ${session.access_token}`
-  }
-  return headers
 }
 
 type UseChatReturn = {
@@ -214,8 +199,6 @@ export function useChat(
       const followupPool = t(followupPoolKey, { returnObjects: true, defaultValue: [] }) as unknown as string[]
 
       try {
-        const headers = await buildAuthHeaders()
-
         const liveStateSnapshot = liveStateProviderRef.current?.()
         const requestBody: Record<string, unknown> = {
           message,
@@ -229,7 +212,8 @@ export function useChat(
 
         const response = await fetch(`/api/projects/${projectId}/chat`, {
           method: 'POST',
-          headers,
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           signal: controller.signal,
           body: JSON.stringify(requestBody)
         })

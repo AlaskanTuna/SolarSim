@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { ChatProvider } from '@/components/chat/ChatProvider'
 import { useChat } from '../useChat'
 
-const getSessionMock = vi.fn()
 let idCounter = 0
 
 function installFetchMock(fetchMock: ReturnType<typeof vi.fn>) {
@@ -19,14 +18,6 @@ function installFetchMock(fetchMock: ReturnType<typeof vi.fn>) {
     configurable: true
   })
 }
-
-vi.mock('@/lib/supabase', () => ({
-  getSupabase: () => ({
-    auth: {
-      getSession: (...args: unknown[]) => getSessionMock(...args)
-    }
-  })
-}))
 
 vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => ({
@@ -73,14 +64,6 @@ describe('useChat', () => {
   beforeEach(() => {
     vi.restoreAllMocks()
     idCounter = 0
-    getSessionMock.mockReset()
-    getSessionMock.mockResolvedValue({
-      data: {
-        session: {
-          access_token: 'test-token'
-        }
-      }
-    })
     vi.stubGlobal('crypto', {
       randomUUID: () => `message-${++idCounter}`
     })
@@ -111,9 +94,9 @@ describe('useChat', () => {
       expect.objectContaining({
         method: 'POST',
         headers: expect.objectContaining({
-          Authorization: 'Bearer test-token',
           'Content-Type': 'application/json'
         }),
+        credentials: 'include',
         signal: expect.any(AbortSignal)
       })
     )

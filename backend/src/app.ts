@@ -12,6 +12,8 @@ import { tariffRouter } from './routes/tariff.js'
 import { errorHandler } from './middleware/errorHandler.js'
 import { requestLogger } from './middleware/requestLogger.js'
 import { env } from './config/env.js'
+import { toNodeHandler } from 'better-auth/node'
+import { auth } from './config/auth.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -64,6 +66,7 @@ app.use(
     }
   })
 )
+app.all('/api/auth/*splat', toNodeHandler(auth))
 app.use(express.json())
 app.use(requestLogger)
 

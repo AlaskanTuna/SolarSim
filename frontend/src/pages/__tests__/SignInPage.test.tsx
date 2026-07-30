@@ -1,6 +1,6 @@
 // Tests for §5.2.1.5 Authentication > SignInPage (TCNO prefix SI)
 // Covers frontend/src/pages/SignInPage.tsx surface-level form behaviour only.
-// Auth scaffolding (Supabase Auth client internals) excluded per Chapter 4 §4.6.
+// Auth client internals are excluded per Chapter 4 §4.6.
 
 import React from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
@@ -115,7 +115,7 @@ describe('SignInPage', () => {
   })
 
   // SI-05
-  it('renders the Supabase error string in a destructive banner on auth failure', async () => {
+  it('renders the auth error string in a destructive banner on auth failure', async () => {
     setAuth()
     signInMock.mockResolvedValue({ error: { message: 'Invalid login credentials' } })
 

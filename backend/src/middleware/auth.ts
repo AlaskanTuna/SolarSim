@@ -1,12 +1,13 @@
 /**
- * Supabase bearer-token authentication middleware.
+ * Better Auth session authentication middleware.
  *
- * Verifies API requests against Supabase Auth and attaches the authenticated
+ * Verifies API requests against Better Auth and attaches the authenticated
  * user identity to Express requests for downstream route ownership checks.
  */
 
 import type { Request, Response, NextFunction } from 'express'
-import { supabase } from '../config/supabase.js'
+import { fromNodeHeaders } from 'better-auth/node'
+import { auth } from '../config/auth.js'
 
 declare global {
   namespace Express {
@@ -18,31 +19,23 @@ declare global {
 }
 
 /**
- * Verifies the `Authorization: Bearer <token>` session and stores the Supabase
+ * Verifies the Better Auth session and stores the authenticated
  * user id/email on `req.user`.
  *
- * @param req - Incoming request carrying a Supabase access token
+ * @param req - Incoming request carrying Better Auth session cookies
  * @param res - Response used for unauthorised JSON failures
  * @param next - Continuation called after successful authentication
  */
 export async function requireAuth(req: Request, res: Response, next: NextFunction) {
-  const authHeader = req.headers.authorization
-  if (!authHeader?.startsWith('Bearer ')) {
-    console.warn(`[Auth] Missing bearer token for ${req.method} ${req.originalUrl}`)
-    res.status(401).json({ error: 'Unauthorized' })
-    return
-  }
+  const session = await auth.api.getSession({ headers: fromNodeHeaders(req.headers) })
 
-  const token = authHeader.slice(7)
-  const { data, error } = await supabase.auth.getUser(token)
-
-  if (error || !data.user) {
+  if (!session?.user) {
     console.warn(`[Auth] Invalid session for ${req.method} ${req.originalUrl}`)
     res.status(401).json({ error: 'Unauthorized' })
     return
   }
 
-  req.user = { id: data.user.id, email: data.user.email ?? '' }
+  req.user = { id: session.user.id, email: session.user.email ?? '' }
   console.info(`[Auth] user=${req.user.id} ${req.method} ${req.originalUrl}`)
   next()
 }
