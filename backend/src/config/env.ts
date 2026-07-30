@@ -33,6 +33,13 @@ const envSchema = z
     R2_BUCKET: z.string().min(1),
     BETTER_AUTH_SECRET: z.string().min(32),
     BETTER_AUTH_URL: z.string().url(),
+    RESEND_API_KEY: z.string().min(1),
+    // Sender identity must stay on the DKIM-verified solarsim.tech domain, or
+    // deliverability and existing inbox reputation are lost.
+    EMAIL_FROM: z.string().min(1).default('SolarSim <noreply@solarsim.tech>'),
+    // Absolute base for images referenced in email — clients cannot resolve
+    // relative paths. Falls back to the public site origin.
+    EMAIL_ASSET_BASE_URL: z.string().url().default('https://solarsim.tech'),
     GOOGLE_OAUTH_CLIENT_ID: z.string().min(1),
     GOOGLE_OAUTH_SECRET: z.string().min(1),
     FRONTEND_URL: z.string().url().optional().default('http://localhost:5173'),
