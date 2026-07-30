@@ -2,7 +2,7 @@
  * Authenticated API client.
  *
  * Every backend call goes through `apiFetch`, which:
- *   - Pulls the current Supabase session and attaches a `Bearer` token.
+ *   - Includes the browser's session cookie.
  *   - JSON-encodes the body and sets the right content-type.
  *   - Logs request / response info in dev mode for easier debugging.
  *   - Throws a typed `ApiError` on non-2xx responses so React Query and
@@ -11,8 +11,6 @@
  * All paths are relative to `/api` (proxied to the backend via Vite in dev and
  * rewritten by Vercel in production).
  */
-
-import { getSupabase } from '@/lib/supabase'
 
 /**
  * Error thrown by `apiFetch` for any non-2xx response. Preserves the HTTP
@@ -37,19 +35,11 @@ export class ApiError extends Error {
  * @throws `ApiError` if the response status is not 2xx
  */
 export async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
-  const supabase = getSupabase()
-  const {
-    data: { session }
-  } = await supabase.auth.getSession()
   const method = options?.method ?? 'GET'
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...((options?.headers as Record<string, string>) ?? {})
-  }
-
-  if (session?.access_token) {
-    headers['Authorization'] = `Bearer ${session.access_token}`
   }
 
   if (import.meta.env.DEV) {
@@ -58,6 +48,7 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
 
   const response = await fetch(`/api${path}`, {
     ...options,
+    credentials: 'include',
     headers
   })
 

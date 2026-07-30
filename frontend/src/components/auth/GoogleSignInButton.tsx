@@ -1,5 +1,5 @@
 /**
- * Supabase Google OAuth entry point for sign-in and sign-up screens.
+ * Google OAuth entry point for sign-in and sign-up screens.
  * Used anywhere the auth flow offers one-click provider login instead of email credentials.
  */
 
@@ -16,7 +16,7 @@ interface GoogleSignInButtonProps {
 }
 
 /**
- * Renders a branded Google sign-in action and invokes Supabase OAuth through the auth hook.
+ * Renders a branded Google sign-in action through the auth hook.
  * @param props - Optional label override and error callback for surfacing OAuth launch failures.
  */
 export function GoogleSignInButton({ label = 'Continue with Google', onError }: GoogleSignInButtonProps) {

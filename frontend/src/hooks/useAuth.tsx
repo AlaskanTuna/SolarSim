@@ -1,36 +1,37 @@
 /**
- * Auth provider + hook backed by Supabase Auth.
+ * Auth provider + hook backed by Better Auth.
  *
- * Wraps `supabase.auth` and exposes the current user/session, loading state,
+ * Wraps `authClient` and exposes the current user/session, loading state,
  * and helpers for email-password and Google OAuth sign-in/out. Also handles
  * two cross-cutting concerns:
- *   - Surfaces OAuth callback errors that come back in the URL (Supabase
- *     implicit flow puts them in the hash, some flows put them in the query).
- *     Without this the user lands silently with no idea why sign-in failed.
+ *   - Surfaces OAuth callback errors that come back in the URL. Without this
+ *     the user lands silently with no idea why sign-in failed.
  *   - Wipes the React Query cache on sign-out so a subsequent sign-in cannot
  *     briefly render the previous user's cached data.
  */
 
-import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react'
-import type { User, Session, AuthError } from '@supabase/supabase-js'
+import { createContext, useCallback, useContext, useEffect, type ReactNode } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { getSupabase } from '@/lib/supabase'
+import { authClient } from '@/lib/auth-client'
 import { notify } from '@/components/ui/toastConfig'
+
+type AuthSessionData = typeof authClient.$Infer.Session
+type AuthError = { message: string }
 
 /**
  * Value exposed by `useAuth`.
  *
- * - `user`              — current Supabase user, or `null` if signed out
- * - `session`           — current session (includes access token), or `null`
- * - `loading`           — `true` while the initial `getSession()` is pending
+ * - `user`              — current user, or `null` if signed out
+ * - `session`           — current session, or `null`
+ * - `loading`           — `true` while the initial session request is pending
  * - `signIn`            — email-password sign-in; returns `{ error }`
  * - `signUp`            — email-password sign-up; returns `{ error }`
  * - `signInWithGoogle`  — Google OAuth sign-in; returns `{ error }`
  * - `signOut`           — sign out and clear the React Query cache
  */
 type AuthContextValue = {
-  user: User | null
-  session: Session | null
+  user: AuthSessionData['user'] | null
+  session: AuthSessionData['session'] | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>
   signUp: (email: string, password: string) => Promise<{ error: AuthError | null }>
@@ -40,22 +41,25 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
+function toAuthError(error: unknown): AuthError | null {
+  if (!error) return null
+  if (typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+    return { message: error.message }
+  }
+  return { message: 'Authentication failed' }
+}
+
 /**
  * Wraps the React tree with auth context. Mount once near the root, above any
  * component that calls `useAuth`.
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const supabase = getSupabase()
   const queryClient = useQueryClient()
-  const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { data, isPending } = authClient.useSession()
+  const user = data?.user ?? null
+  const session = data?.session ?? null
 
-  // Surface OAuth callback errors. Supabase implicit-flow failures (e.g. identity already
-  // exists, access denied, server_error) come back in the URL hash; some flows put them in
-  // the query string instead. Without this, the user lands silently on /dashboard or /sign-in
-  // with no idea why their sign-in failed. Strip the params after toasting so a page refresh
-  // doesn't re-fire.
+  // Strip callback errors after toasting so a page refresh does not re-fire them.
   useEffect(() => {
     if (typeof window === 'undefined') return
     const hash = window.location.hash.startsWith('#') ? window.location.hash.slice(1) : ''
@@ -76,53 +80,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      // Wipe the React Query cache when the user signs out (or the session expires)
-      // so a subsequent sign-in cannot momentarily render the previous user's
-      // cached projects/quota/analyses while the refetch is in flight.
-      if (event === 'SIGNED_OUT' || !session) {
-        queryClient.clear()
-      }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [queryClient])
+    if (!isPending && !session) queryClient.clear()
+  }, [isPending, queryClient, session])
 
   const signIn = useCallback(async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    return { error }
+    const { error } = await authClient.signIn.email({ email, password })
+    return { error: toAuthError(error) }
   }, [])
 
   const signUp = useCallback(async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({ email, password })
-    return { error }
+    const { error } = await authClient.signUp.email({ email, name: email, password })
+    return { error: toAuthError(error) }
   }, [])
 
   const signInWithGoogle = useCallback(async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/dashboard` }
-    })
-    return { error }
+    const { error } = await authClient.signIn.social({ provider: 'google', callbackURL: '/dashboard' })
+    return { error: toAuthError(error) }
   }, [])
 
   const signOut = useCallback(async () => {
-    await supabase.auth.signOut()
+    await authClient.signOut()
     queryClient.clear()
   }, [queryClient])
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signIn, signUp, signInWithGoogle, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading: isPending, signIn, signUp, signInWithGoogle, signOut }}>
       {children}
     </AuthContext.Provider>
   )

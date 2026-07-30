@@ -1,22 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-const { count, single, eq, select, from } = vi.hoisted(() => {
-  const single = vi.fn()
-  const eq = vi.fn(() => ({ single }))
-  const select = vi.fn(() => ({ eq }))
-  const from = vi.fn(() => ({ select }))
+const { count, findUnique } = vi.hoisted(() => {
+  const findUnique = vi.fn()
   const count = vi.fn()
-  return { count, single, eq, select, from }
+  return { count, findUnique }
 })
 
 vi.mock('../../config/prisma.js', () => ({
   prisma: {
+    user: { findUnique },
     projectQuotaUsage: { count }
   }
-}))
-
-vi.mock('../../config/supabase.js', () => ({
-  supabase: { from }
 }))
 
 import { getQuotaSummary, startOfUtcDay, nextUtcMidnight } from '../userService.js'
@@ -40,15 +34,12 @@ describe('userService date helpers', () => {
 
 describe('getQuotaSummary', () => {
   beforeEach(() => {
-    single.mockReset()
+    findUnique.mockReset()
     count.mockReset()
-    from.mockClear()
-    select.mockClear()
-    eq.mockClear()
   })
 
   it('returns FREE tier quota with used count and reset timestamp', async () => {
-    single.mockResolvedValue({ data: { tier: 'FREE' }, error: null })
+    findUnique.mockResolvedValue({ tier: 'FREE' })
     count.mockResolvedValue(3)
 
     const summary = await getQuotaSummary('user_1', new Date('2026-04-17T10:00:00.000Z'))
@@ -62,10 +53,11 @@ describe('getQuotaSummary', () => {
     expect(count).toHaveBeenCalledWith({
       where: { userId: 'user_1', createdAt: { gte: new Date('2026-04-17T00:00:00.000Z') } }
     })
+    expect(findUnique).toHaveBeenCalledWith({ where: { id: 'user_1' }, select: { tier: true } })
   })
 
   it('blocks FREE user at 5/5 used (caller enforces)', async () => {
-    single.mockResolvedValue({ data: { tier: 'FREE' }, error: null })
+    findUnique.mockResolvedValue({ tier: 'FREE' })
     count.mockResolvedValue(5)
 
     const summary = await getQuotaSummary('user_1', new Date('2026-04-17T10:00:00.000Z'))
@@ -75,7 +67,7 @@ describe('getQuotaSummary', () => {
   })
 
   it('returns PRO tier with 20-project cap', async () => {
-    single.mockResolvedValue({ data: { tier: 'PRO' }, error: null })
+    findUnique.mockResolvedValue({ tier: 'PRO' })
     count.mockResolvedValue(12)
 
     const summary = await getQuotaSummary('user_2', new Date('2026-04-17T10:00:00.000Z'))
@@ -86,7 +78,7 @@ describe('getQuotaSummary', () => {
   })
 
   it('returns ENTERPRISE tier with null (unlimited) limit', async () => {
-    single.mockResolvedValue({ data: { tier: 'ENTERPRISE' }, error: null })
+    findUnique.mockResolvedValue({ tier: 'ENTERPRISE' })
     count.mockResolvedValue(99)
 
     const summary = await getQuotaSummary('user_3', new Date('2026-04-17T10:00:00.000Z'))
@@ -97,7 +89,7 @@ describe('getQuotaSummary', () => {
   })
 
   it('falls back to FREE when profile row is missing', async () => {
-    single.mockResolvedValue({ data: null, error: { message: 'not found' } })
+    findUnique.mockResolvedValue(null)
     count.mockResolvedValue(0)
 
     const summary = await getQuotaSummary('ghost', new Date('2026-04-17T10:00:00.000Z'))
@@ -107,7 +99,7 @@ describe('getQuotaSummary', () => {
   })
 
   it('resets used count after UTC midnight (injectable clock)', async () => {
-    single.mockResolvedValue({ data: { tier: 'FREE' }, error: null })
+    findUnique.mockResolvedValue({ tier: 'FREE' })
     count.mockResolvedValueOnce(5).mockResolvedValueOnce(0)
 
     const before = await getQuotaSummary('user_1', new Date('2026-04-17T23:59:00.000Z'))

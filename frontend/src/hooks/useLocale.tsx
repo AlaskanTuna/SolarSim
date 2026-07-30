@@ -3,8 +3,8 @@
  *
  * Reads the initial locale from (in priority order): the `?locale=` query
  * param, localStorage, then the default. Persists every change to
- * localStorage so the next page load remembers it, and to the Supabase user
- * metadata when signed in so the choice survives across devices.
+ * localStorage so the next page load remembers it, and to the signed-in user's
+ * server-side `locale` field so the choice survives across devices.
  *
  * Syncs the locale to i18next and to the `<html lang>` attribute so
  * screen-readers and CSS `:lang(...)` selectors work correctly.
@@ -13,7 +13,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react'
 import i18n, { DEFAULT_LOCALE, isSupportedLocale, LOCALE_STORAGE_KEY, type SupportedLocale } from '@/lib/i18n'
 import { useAuth } from '@/hooks/useAuth'
-import { getSupabase } from '@/lib/supabase'
+import { authClient } from '@/lib/auth-client'
 
 /** Value exposed by `useLocale`. */
 type LocaleContextValue = {
@@ -66,8 +66,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     }
     if (lastSyncedUserId.current === user.id) return
     lastSyncedUserId.current = user.id
-    const meta = (user.user_metadata ?? {}) as Record<string, unknown>
-    const remote = meta.locale as string | null | undefined
+    const remote = user.locale
     if (isSupportedLocale(remote) && remote !== locale) {
       setLocaleState(remote)
       window.localStorage.setItem(LOCALE_STORAGE_KEY, remote)
@@ -81,11 +80,9 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
         window.localStorage.setItem(LOCALE_STORAGE_KEY, next)
       }
       if (user) {
-        getSupabase()
-          .auth.updateUser({ data: { locale: next } })
-          .catch(() => {
-            /* non-fatal */
-          })
+        authClient.updateUser({ locale: next }).catch(() => {
+          /* non-fatal */
+        })
       }
     },
     [user]

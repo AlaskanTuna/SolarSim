@@ -5,7 +5,6 @@
  * UTC reset windows.
  */
 
-import { supabase } from '../config/supabase.js'
 import { prisma } from '../config/prisma.js'
 import { TIER_DAILY_LIMITS, type UserTier, type QuotaSummary } from '@shared/types'
 
@@ -34,18 +33,18 @@ export function nextUtcMidnight(now: Date = new Date()): Date {
 }
 
 /**
- * Reads the user's subscription tier from Supabase profiles.
+ * Reads the user's subscription tier from the application user record.
  *
- * @param userId - Authenticated user id matching the profile row
- * @returns User tier, defaulting to `FREE` when the profile is missing
+ * @param userId - Authenticated user id matching the user record
+ * @returns User tier, defaulting to `FREE` when the user is missing
  */
 export async function getUserTier(userId: string): Promise<UserTier> {
-  const { data, error } = await supabase.from('profiles').select('tier').eq('id', userId).single()
-  if (error || !data) {
-    console.warn(`[UserTier] profile missing for user=${userId}, defaulting to FREE`, error?.message ?? '')
+  const user = await prisma.user.findUnique({ where: { id: userId }, select: { tier: true } })
+  if (!user) {
+    console.warn(`[UserTier] profile missing for user=${userId}, defaulting to FREE`)
     return 'FREE'
   }
-  return data.tier as UserTier
+  return user.tier
 }
 
 /**

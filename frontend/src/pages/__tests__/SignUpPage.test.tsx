@@ -76,7 +76,7 @@ describe('SignUpPage', () => {
   })
 
   // SU-04
-  it('renders the Supabase error string when signUp returns an error', async () => {
+  it('renders the auth error string when signUp returns an error', async () => {
     setAuth()
     signUpMock.mockResolvedValue({ error: { message: 'User already registered' } })
 

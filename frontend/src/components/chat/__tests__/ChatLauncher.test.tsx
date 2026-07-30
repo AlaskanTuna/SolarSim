@@ -6,7 +6,7 @@
 // lifecycle and page-aware mounting.
 
 import React from 'react'
-import { fireEvent, render, screen, act } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 
 vi.mock('react-i18next', () => ({
@@ -20,14 +20,6 @@ vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => ({ user: { id: 'user-1' } })
 }))
 
-vi.mock('@/lib/supabase', () => ({
-  getSupabase: () => ({
-    auth: {
-      getSession: () => Promise.resolve({ data: { session: { access_token: 'tok' } } })
-    }
-  })
-}))
-
 vi.mock('../ChatPanel', () => ({
   ChatPanel: ({ projectId, page }: { projectId: string; page: string }) => (
     <div data-testid={`chat-panel-${page}-${projectId}`}>chat-panel</div>
@@ -35,7 +27,7 @@ vi.mock('../ChatPanel', () => ({
 }))
 
 import { ChatLauncher } from '../ChatLauncher'
-import { ChatProvider, ChatContext } from '../ChatProvider'
+import { ChatProvider } from '../ChatProvider'
 
 function renderLauncher(page: 'workbench' | 'analysis', projectId = 'project-1') {
   return render(
