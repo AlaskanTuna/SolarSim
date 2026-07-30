@@ -44,7 +44,7 @@ export const renderVerificationEmail = (url: string): RenderedEmail => {
       .brand { display: table; text-decoration: none; }
       .brand-cell { display: table-cell; vertical-align: middle; }
       .brand-gap { width: 12px; }
-      .brand-mark { display: inline-block; width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg, #ea580c, #f59e0b); box-shadow: 0 10px 24px rgba(234, 88, 12, 0.26); }
+      .brand-mark { display: inline-block; width: 42px; height: 42px; line-height: 0; }
       .brand-name { color: #1c1917; font-family: 'Outfit', 'Segoe UI', system-ui, sans-serif; font-size: 22px; font-weight: 800; letter-spacing: 0; }
       .eyebrow { margin: 0; color: #9a3412; font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
       .hero { position: relative; padding: 34px 32px 18px; }
@@ -68,7 +68,7 @@ export const renderVerificationEmail = (url: string): RenderedEmail => {
       <div class="card">
         <div class="header">
           <div class="brand">
-            <span class="brand-cell"><span class="brand-mark"><img src="${logoUrl}" width="42" height="42" alt="SolarSim logo" style="display:block;border:0;" /></span></span>
+            <span class="brand-cell"><span class="brand-mark"><img src="${logoUrl}" width="42" height="42" alt="" style="display:block;border:0;" /></span></span>
             <span class="brand-cell brand-gap"></span>
             <span class="brand-cell brand-name">SolarSim</span>
           </div>

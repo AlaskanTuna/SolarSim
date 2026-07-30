@@ -49,7 +49,17 @@ describe('email renderers', () => {
     const email = render(testUrl)
 
     expect(email.html).toContain('src="https://assets.example/email-logo.png"')
-    expect(email.html).toContain('alt="SolarSim logo"')
+  })
+
+  // Most clients block images by default, so the logo is decorative: an empty alt
+  // lets a blocked load collapse to nothing instead of rendering clipped alt text
+  // in a 42px box, and the adjacent wordmark still carries the brand.
+  it.each(renderers)('keeps the logo decorative with the wordmark carrying meaning', ({ render }) => {
+    const email = render(testUrl)
+
+    expect(email.html).toContain('alt=""')
+    expect(email.html).not.toContain('alt="SolarSim logo"')
+    expect(email.html).toContain('SolarSim</span>')
   })
 
   it.each(renderers)('does not leave template tokens behind', ({ render }) => {
