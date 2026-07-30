@@ -17,7 +17,8 @@ _Search a roof. Tweak the layout. Get a NEM-accurate savings report. As easy as 
   <img src="https://img.shields.io/badge/vite-6-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
   <img src="https://img.shields.io/badge/express-5-000000?style=flat-square&logo=express&logoColor=white" alt="Express" />
   <img src="https://img.shields.io/badge/prisma-6-2D3748?style=flat-square&logo=prisma&logoColor=white" alt="Prisma" />
-  <img src="https://img.shields.io/badge/supabase-3FCF8E?style=flat-square&logo=supabase&logoColor=white" alt="Supabase" />
+  <img src="https://img.shields.io/badge/neon-00E599?style=flat-square&logo=neon&logoColor=black" alt="Neon" />
+  <img src="https://img.shields.io/badge/cloudflare%20r2-F38020?style=flat-square&logo=cloudflare&logoColor=white" alt="Cloudflare R2" />
   <img src="https://img.shields.io/badge/konva.js-konva-0D83CD?style=flat-square" alt="Konva.js" />
   <img src="https://img.shields.io/badge/google%20solar%20api-4285F4?style=flat-square&logo=googlemaps&logoColor=white" alt="Google Solar API" />
   <img src="https://img.shields.io/badge/deploy-heroku%20%2B%20vercel-79589F?style=flat-square&logo=heroku&logoColor=white" alt="Heroku + Vercel" />
@@ -43,7 +44,7 @@ _Search a roof. Tweak the layout. Get a NEM-accurate savings report. As easy as 
 > SolarSim is an **assessment** tool. It produces an estimate report, not a quotation, not a contract, and not an installation order. Final pricing and feasibility always come from a licensed Malaysian installer.
 
 > [!WARNING]
-> **The live deployment is currently offline.** The Supabase project backing `solarsim.tech` is paused pending a database provider migration (tracked in open issues). Everything below still describes the shipped product — clone it and run the local quickstart to see it working.
+> **The live deployment is currently offline.** The database has moved to Neon; the remaining hosting cutover for `solarsim.tech` is still in progress. Everything below describes the product — clone it and run the local quickstart to see it working.
 
 ---
 
@@ -101,19 +102,19 @@ User assumptions: non-technical, unfamiliar with solar terminology, accessing vi
 
 ## 🏗 Feature Matrix
 
-|     | Feature                       | What it means                                                                                                                                             |
-| --- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🛰  | **Solar API Pipeline**        | One Solar API call per address, results cached forever. Building insights, monthly flux, and DSM/RGB GeoTIFFs are persisted in Supabase Storage.          |
-| 🖼  | **GeoTIFF Re-sampling**       | Panel moves never re-hit the Solar API. Flux is re-sampled locally from the cached GeoTIFF using point-in-polygon over each panel's rotated OBB.          |
-| 🎨  | **Konva Canvas Workbench**    | React-Konva stage with pan, zoom, marquee select, free-rotate, snap-align, undo/redo, and an irradiance-direction amber glow for the chosen month.        |
-| 💡  | **Roof-Aware Layout Presets** | Tell SolarSim your monthly bill and savings goal; it right-sizes panel count and orientation. Skippable, so power users get the maximum-coverage view.    |
-| 💰  | **NEM Rakyat 3.0 Engine**     | Self-consumption + export simulation, EEI banding, AFA monthly variation, SST and RE Fund. Implemented as a typed billing engine with 36 unit tests.      |
-| 📈  | **Lifecycle Mode**            | Switch from simple payback to a 25-year lifecycle view: degradation, tariff escalation, scheduled inverter swaps, and annual maintenance.                 |
-| 🌐  | **i18n (EN / MS / ZH)**       | Three fully-translated locales including all tariff explainers, with locale-aware Intl number/date formatting (`zh-Hans-MY` for the demo audience).       |
-| 🎭  | **Theme + A11y**              | Light / dark / system theme persisted via `next-themes`, glassmorphic UI primitives, full keyboard support on the canvas, and visible focus rings.        |
-| 📄  | **Sandboxed PDF Export**      | Heroku backend signs a 60-second token; a separate Vercel function navigates a headless Chromium to a print route and ships the A4 landscape PDF.         |
-| 🔐  | **Supabase Auth**             | Email/password and Google OAuth, with per-user quota enforcement, project-level RLS, and remember-email on sign-in.                                       |
-| 💬  | **Sol Chatbot Assistant**     | Project-aware chat grounded in your project's data and a curated solar knowledge bible. Streams over SSE, page-aware, EN/MS/ZH, prompt-injection guarded. |
+|     | Feature                       | What it means                                                                                                                                                 |
+| --- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🛰  | **Solar API Pipeline**        | One Solar API call per address, results cached forever. Building insights, monthly flux, and DSM/RGB GeoTIFFs are persisted in private Cloudflare R2 storage. |
+| 🖼  | **GeoTIFF Re-sampling**       | Panel moves never re-hit the Solar API. Flux is re-sampled locally from the cached GeoTIFF using point-in-polygon over each panel's rotated OBB.              |
+| 🎨  | **Konva Canvas Workbench**    | React-Konva stage with pan, zoom, marquee select, free-rotate, snap-align, undo/redo, and an irradiance-direction amber glow for the chosen month.            |
+| 💡  | **Roof-Aware Layout Presets** | Tell SolarSim your monthly bill and savings goal; it right-sizes panel count and orientation. Skippable, so power users get the maximum-coverage view.        |
+| 💰  | **NEM Rakyat 3.0 Engine**     | Self-consumption + export simulation, EEI banding, AFA monthly variation, SST and RE Fund. Implemented as a typed billing engine with 36 unit tests.          |
+| 📈  | **Lifecycle Mode**            | Switch from simple payback to a 25-year lifecycle view: degradation, tariff escalation, scheduled inverter swaps, and annual maintenance.                     |
+| 🌐  | **i18n (EN / MS / ZH)**       | Three fully-translated locales including all tariff explainers, with locale-aware Intl number/date formatting (`zh-Hans-MY` for the demo audience).           |
+| 🎭  | **Theme + A11y**              | Light / dark / system theme persisted via `next-themes`, glassmorphic UI primitives, full keyboard support on the canvas, and visible focus rings.            |
+| 📄  | **Sandboxed PDF Export**      | Heroku backend signs a 60-second token; a separate Vercel function navigates a headless Chromium to a print route and ships the A4 landscape PDF.             |
+| 🔐  | **Better Auth**               | Self-hosted email/password and Google OAuth, with per-user quota enforcement and remember-email on sign-in.                                                   |
+| 💬  | **Sol Chatbot Assistant**     | Project-aware chat grounded in your project's data and a curated solar knowledge bible. Streams over SSE, page-aware, EN/MS/ZH, prompt-injection guarded.     |
 
 ---
 
@@ -129,15 +130,15 @@ SolarSim is built around one product stance: **Malaysian homeowners should be ab
 
 ## 🏛 Architecture
 
-SolarSim is a three-tier monorepo: a **React 19 + Vite SPA**, an **Express 5 + Prisma backend**, and a **Vercel Puppeteer microservice** for PDF rendering. Supabase backs auth, Postgres, and the GeoTIFF object store.
+SolarSim is a three-tier monorepo: a **React 19 + Vite SPA**, an **Express 5 + Prisma backend**, and a **Vercel Puppeteer microservice** for PDF rendering. Better Auth runs inside Express, Neon provides Postgres, and Cloudflare R2 stores cached GeoTIFFs.
 
 ```mermaid
 flowchart LR
     Browser[Browser] --> Frontend[React 19 + Vite frontend]
     Frontend --> Backend[Express 5 backend]
-    Frontend --> Supabase[Supabase Auth]
-    Backend --> Postgres[(Supabase Postgres)]
-    Backend --> Storage[(Supabase Storage<br/>cached GeoTIFFs)]
+    Backend --> Auth[Better Auth]
+    Backend --> Postgres[(Neon Postgres)]
+    Backend --> Storage[(Cloudflare R2<br/>cached GeoTIFFs)]
     Backend --> Solar[Google Solar API]
     Backend --> Gemini[Gemini / Vertex AI<br/>Sol chatbot]
     Frontend --> Maps[Google Maps JS API]
@@ -156,7 +157,7 @@ flowchart LR
     Insights --> Layers[3. dataLayers API call]
     Layers --> Download[4. Download flux + RGB GeoTIFFs]
     Download --> Convert[5. Sharp → WebP for the canvas]
-    Convert --> Persist[6. Persist to Supabase Storage]
+    Convert --> Persist[6. Persist to Cloudflare R2]
     Persist --> Hydrate[Frontend hydrates Konva stage]
 ```
 
@@ -202,7 +203,7 @@ flowchart LR
 flowchart LR
     User[User opens Sol panel] --> Composer[Composer + cooldown gate]
     Composer --> Post[POST /api/projects/:id/chat]
-    Post --> Auth[Supabase JWT auth]
+    Post --> Auth[Better Auth session]
     Auth --> Guard[Prompt-injection + length guard]
     Guard --> Project[(Load Project + Location<br/>from Postgres)]
     Project --> Digest[Render page-aware digest<br/>workbench or analysis]
@@ -228,9 +229,9 @@ flowchart LR
 | Canvas & 3D     | Konva 9 · react-konva · @react-three/fiber · @react-three/drei               | Workbench stage, snap alignment, panel-model 3D preview         |
 | Charts & DnD    | Recharts 3 · @dnd-kit/core · @dnd-kit/sortable                               | Analysis charts, sortable hero card layout                      |
 | i18n & Theming  | i18next · react-i18next · next-themes                                        | en / ms / zh, light / dark / system theme                       |
-| Backend         | Express 5 · TypeScript 5 · Prisma 6 · Zod                                    | REST API, validators, typed Supabase access                     |
+| Backend         | Express 5 · TypeScript 5 · Prisma 6 · Zod                                    | REST API, validators, Better Auth                               |
 | Geo & Imagery   | geotiff.js · sharp · proj4                                                   | GeoTIFF parsing, raster → WebP, lat-lng ↔ pixel reprojection    |
-| Identity & Data | Supabase (Auth + Postgres + Storage)                                         | Email/password + Google OAuth, RLS-backed projects              |
+| Identity & Data | Better Auth · Neon Postgres · Cloudflare R2                                  | Email/password + Google OAuth, API-authorized per-user projects |
 | External APIs   | Google Solar API · Google Maps JavaScript API · Geocoding API                | One Solar call per address, cached forever                      |
 | Chat & GenAI    | @google/genai (Gemini / Vertex AI) · SSE-over-POST streaming                 | Sol assistant with project-grounded prompts, dual-auth fallback |
 | Testing         | Vitest · @testing-library/react · jsdom                                      | Co-located unit tests, 205 passing                              |
@@ -245,7 +246,7 @@ flowchart LR
 > **Looking to reproduce the full stack from scratch — local dev _and_ cloud deploy?**  
 > See **[RUNBOOK.md](RUNBOOK.md)** for the complete clone-to-production walkthrough: cloud account setup, CLI provisioning, env wiring, Heroku + Vercel deploy, custom domain, smoke tests, and troubleshooting. ~60-90 min on a fresh machine.
 >
-> The section below is the **5-minute local quickstart** — enough to boot SolarSim against an existing Supabase + Google Cloud + Resend setup. If you don't have those yet, jump to RUNBOOK.md instead.
+> The section below is the **5-minute local quickstart** — enough to boot SolarSim against an existing Neon + Cloudflare R2 + Google Cloud + Resend setup. If you don't have those yet, jump to RUNBOOK.md instead.
 
 ### Local Quickstart (Existing Cloud Setup)
 
@@ -276,24 +277,23 @@ Visit `http://localhost:5173` → sign up → click the confirmation email → y
 - **Node.js** `24.x` — [nodejs.org](https://nodejs.org)
 - **pnpm** `10.33.0` (via `corepack enable` — ships with Node 24)
 - **git**
-- An existing Supabase project, Google Cloud project (Solar + Maps + Geocoding APIs enabled), and Resend account. New to all of these? Use **[RUNBOOK.md](RUNBOOK.md)** to provision them.
+- A Neon project, private Cloudflare R2 bucket, Google Cloud project (Solar + Maps + Geocoding APIs enabled), and Resend account. New to these services? Use **[RUNBOOK.md](RUNBOOK.md)** to provision them.
 
 ### Useful Commands
 
-| Command                  | Description                                                         |
-| ------------------------ | ------------------------------------------------------------------- |
-| `pnpm dev`               | Start frontend + backend concurrently                               |
-| `pnpm dev:backend`       | Start backend only                                                  |
-| `pnpm dev:frontend`      | Start frontend only                                                 |
-| `pnpm build`             | Build all workspaces for production                                 |
-| `pnpm test`              | Run frontend + backend unit tests                                   |
-| `pnpm typecheck`         | Strict TS check across every package                                |
-| `pnpm format`            | Run Prettier across the repo                                        |
-| `pnpm prisma:generate`   | Regenerate the Prisma client (after `schema.prisma` edits)          |
-| `pnpm db:migrate`        | Apply migrations interactively (local dev)                          |
-| `pnpm db:migrate:deploy` | Apply migrations non-interactively (Heroku release, CI, recovery)   |
-| `pnpm db:seed`           | Seed tariff config data                                             |
-| `supabase config push`   | Sync `supabase/config.toml` + email templates to the hosted project |
+| Command                  | Description                                                       |
+| ------------------------ | ----------------------------------------------------------------- |
+| `pnpm dev`               | Start frontend + backend concurrently                             |
+| `pnpm dev:backend`       | Start backend only                                                |
+| `pnpm dev:frontend`      | Start frontend only                                               |
+| `pnpm build`             | Build all workspaces for production                               |
+| `pnpm test`              | Run frontend + backend unit tests                                 |
+| `pnpm typecheck`         | Strict TS check across every package                              |
+| `pnpm format`            | Run Prettier across the repo                                      |
+| `pnpm prisma:generate`   | Regenerate the Prisma client (after `schema.prisma` edits)        |
+| `pnpm db:migrate`        | Apply migrations interactively (local dev)                        |
+| `pnpm db:migrate:deploy` | Apply migrations non-interactively (Heroku release, CI, recovery) |
+| `pnpm db:seed`           | Seed tariff config data                                           |
 
 ---
 
@@ -302,7 +302,7 @@ Visit `http://localhost:5173` → sign up → click the confirmation email → y
 The production stack is **two services**: a Heroku web dyno (frontend bundle + Express API) and a separate Vercel function for PDF rendering, fronted by a custom domain (`solarsim.tech`) with HTTPS via Heroku ACM.
 
 > [!TIP]
-> The full deploy walkthrough — `heroku create`, every config var, custom domain attachment, Vercel link, CI/CD secrets, and post-deploy smoke tests — lives in **[RUNBOOK.md §7-§10](RUNBOOK.md)**. It's the canonical guide; this section is a one-screen reference for maintainers who already deployed once and just need a refresher.
+> The full deploy walkthrough — `heroku create`, every config var, custom domain attachment, Vercel link, CI/CD secrets, and post-deploy smoke tests — lives in **[RUNBOOK.md §6-§9](RUNBOOK.md)**. It's the canonical guide; this section is a one-screen reference for maintainers who already deployed once and just need a refresher.
 
 **Deployment Architecture:**
 
@@ -310,7 +310,7 @@ The production stack is **two services**: a Heroku web dyno (frontend bundle + E
 - PDF render function: Vercel Hobby tier (URL set via `PDF_EXPORT_URL`)
 - CI/CD: `.github/workflows/ci-cd.yml` — PRs run tests, pushes to `main` deploy to Heroku
 - Database migrations: auto-applied via Heroku's `release:` phase in `Procfile` (`pnpm db:migrate:deploy`)
-- Email delivery: Resend SMTP relay through Supabase Auth, sender `noreply@solarsim.tech`
+- Email delivery: Resend HTTP API from the Express backend, sender `noreply@solarsim.tech`
 
 **Required GitHub repo secrets** (set via `gh secret set <name>`):
 
@@ -330,7 +330,7 @@ The production stack is **two services**: a Heroku web dyno (frontend bundle + E
 - 🧾 **Tariff Provenance.** Every kWh figure traces back to gazetted Suruhanjaya Tenaga and TNB schedules. RP4 brackets, EEI bands, AFA, SST, and the RE Fund are seeded as typed config, not narrated by an LLM.
 - 🛰 **Imagery Scope.** Rooftop imagery and flux rasters come exclusively from the Google Solar API and stay scoped to the user's project. SolarSim does not scrape, syndicate, or republish any third-party data.
 - ⚖ **Layout Boundary.** The Workbench plans where panels could go, not whether they should. Purlin spacing, MCB sizing, inverter placement, and roof-load calculations are out of scope and remain the installer's responsibility.
-- 🔑 **Data Ownership.** Supabase Row-Level Security scopes every project to its owner. Account deletion cascades and removes the user's projects, cached imagery, and saved analyses.
+- 🔑 **Data Ownership.** Every API request is authorized against the Better Auth session, and Prisma queries are scoped to that user. Account deletion cascades and removes the user's projects, cached imagery, and saved analyses.
 - 🛡 **PDF Token Security.** PDF exports use signed tokens that expire in 60 seconds and are scoped to a single project, so leaked URLs cannot be replayed by anyone else.
 
 ---
@@ -378,7 +378,7 @@ SolarSim/
 │       └── pages/              #   Route page components (3-page MVP + dashboard suite)
 ├── backend/                    # Express 5 + Prisma API
 │   └── src/
-│       ├── config/             #   Env, Prisma, Supabase clients
+│       ├── config/             #   Env, Prisma, Better Auth, and R2 clients
 │       ├── geo/                #   Coordinate transforms, flux sampler, OBB geometry
 │       ├── middleware/         #   Auth, validation, rate-limit, error handler
 │       ├── routes/             #   /locations, /projects, /tariff, /quota, /health
@@ -389,9 +389,6 @@ SolarSim/
 ├── prisma/
 │   ├── schema.prisma           # Postgres schema (Location, Project, TariffConfig, Quota)
 │   └── seed.ts                 # Seeds RP4 + EEI + AFA + RE Fund tariff defaults
-├── supabase/
-│   ├── config.toml             # Supabase project config (auth, email, OAuth)
-│   └── templates/              # Branded auth email templates (en + ms + zh)
 ├── tests/
 │   └── smoke/                  # Bash smoke tests (auth-z, end-to-end deploys)
 ├── .github/workflows/          # ci-cd.yml: CI + Heroku auto-deploy

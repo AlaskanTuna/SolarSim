@@ -3,7 +3,7 @@
  *
  * A "Location" is the immutable Google Solar API record for a coordinate:
  * building insights JSON, GeoTIFF storage paths, and the RGB satellite image.
- * Each Location is fetched once and cached in Supabase, then reused by every
+ * Each Location is fetched once and cached in Postgres (Neon), then reused by every
  * Project that references it.
  *
  * Endpoints:

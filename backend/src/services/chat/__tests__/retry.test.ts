@@ -5,10 +5,7 @@ const wallClockNow = performance.now.bind(performance)
 const TEST_ENV = {
   BACKEND_PORT: 3001,
   NODE_ENV: 'test',
-  SUPABASE_DATABASE_URL: 'postgresql://postgres:postgres@localhost:5432/solarsim',
   GOOGLE_API_KEY: 'google-api-key',
-  SUPABASE_URL: 'https://example.supabase.co',
-  SUPABASE_SERVICE_ROLE_KEY: 'service-role-key',
   FRONTEND_URL: 'http://localhost:5173',
   PDF_TOKEN_SECRET: 'test-secret-at-least-32-characters-long-ok',
   GEMINI_API_KEY: 'gemini-api-key',

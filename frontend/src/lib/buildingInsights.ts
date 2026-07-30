@@ -82,7 +82,7 @@ function getPanelCenter(raw: unknown): { lat: number; lng: number } | null {
  * subset the frontend uses. Returns `null` when required fields (bounding box, panel dimensions,
  * panel capacity) are missing or malformed; partial roof segments / panels with bad rows are dropped.
  *
- * @param raw - JSON value pulled from Supabase (`Location.buildingInsightsJson`)
+ * @param raw - JSON value pulled from Postgres (`Location.buildingInsightsJson`)
  * @returns {@link ParsedBuildingInsights} or `null` when the payload is unusable
  */
 export function parseBuildingInsights(raw: unknown): ParsedBuildingInsights | null {

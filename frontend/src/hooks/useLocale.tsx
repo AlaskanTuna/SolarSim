@@ -40,8 +40,8 @@ function readInitialLocale(): SupportedLocale {
 }
 
 /**
- * Provides the active UI locale and keeps it in sync with the Supabase user
- * metadata so the choice survives across devices.
+ * Provides the active UI locale and keeps it in sync with the Better Auth user
+ * record so the choice survives across devices.
  */
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth()
