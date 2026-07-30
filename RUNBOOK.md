@@ -150,6 +150,10 @@ Copy these values from Supabase Settings:
 
 Postgres and object storage no longer come from Supabase. Take the database connection strings from Neon (`neon connection-string <branch>`, once pooled and once without `--pooled`, into `DATABASE_URL` and `DIRECT_URL`) and the four `R2_*` values from Cloudflare R2.
 
+> **Append `&connect_timeout=15` to both Neon URLs.** The free tier scales compute to zero when idle, and a cold start can exceed Prisma's 5-second default — without this, the first request after a quiet period fails with `Can't reach database server`. Reproduced and fixed on 30/07/26: a suspended compute returned 500 on sign-in without the setting and 200 in 2.8 s with it.
+>
+> **Never run `neon branches create` bare** — it prints connection URIs, and Neon roles are project-scoped, so a throwaway branch exposes the same password `main` uses. Redirect stdout or use `-o json` and filter.
+
 Create the bucket that stores Solar API GeoTIFFs. The backend expects the bucket name `geotiffs`.
 
 ```sql
