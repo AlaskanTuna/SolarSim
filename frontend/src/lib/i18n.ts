@@ -134,7 +134,7 @@ const resources = {
 } as const
 
 /**
- * Type guard for locale codes coming from external sources (URL params, localStorage, Supabase user metadata).
+ * Type guard for locale codes coming from external sources (URL params, localStorage, Better Auth user record).
  *
  * @param value - Candidate locale string from an untrusted source
  * @returns `true` when `value` is one of {@link SUPPORTED_LOCALES}, narrowing it to `SupportedLocale`

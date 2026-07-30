@@ -5,7 +5,7 @@
  * single-band GeoTIFFs. The workbench renders these as semi-transparent PNG
  * overlays on top of the satellite RGB image. This module converts a raw
  * GeoTIFF band into a coloured PNG with the right alpha and dimensions, then
- * caches the PNG in Supabase Storage so subsequent requests skip the work.
+ * caches the PNG in Cloudflare R2 so subsequent requests skip the work.
  *
  * Pipeline (per overlay request):
  *   1. Try to return the cached `<tif>_overlay.png` via signed URL.

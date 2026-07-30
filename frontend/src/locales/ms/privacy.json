@@ -2,7 +2,7 @@
   "header": {
     "title": "Privasi & Keselamatan Data",
     "subtitle": "Bagaimana SolarSim mengumpul, menggunakan dan melindungi maklumat peribadi anda di bawah Akta Perlindungan Data Peribadi 2010 (PDPA) Malaysia.",
-    "lastUpdated": "Kemas kini terakhir: 5 Mei 2026"
+    "lastUpdated": "Kemas kini terakhir: 30 Julai 2026"
   },
   "tableOfContents": "Pada halaman ini",
   "sections": {
@@ -16,7 +16,7 @@
     "dataCollected": {
       "title": "Maklumat Yang Kami Kumpul",
       "body": [
-        "Kami mengumpul e-mel akaun anda dan hash kata laluan melalui Supabase Auth apabila anda mendaftar dengan e-mel dan kata laluan. Jika anda log masuk dengan Google, Supabase juga memberi kami nama paparan dan alamat e-mel yang dikaitkan dengan akaun itu.",
+        "Kami mengumpul e-mel akaun anda dan hash kata laluan apabila anda mendaftar dengan e-mel dan kata laluan. Pengesahan dijalankan di dalam aplikasi ini sendiri, dan rekod tersebut disimpan dalam pangkalan data kami sendiri. Jika anda log masuk dengan Google, Google juga memberi kami nama paparan dan alamat e-mel yang dikaitkan dengan akaun itu.",
         "Kami juga mengumpul data projek yang anda cipta atau ubah, termasuk nama projek, koordinat bangunan, status lokasi yang dipilih, susun atur panel solar yang telah diedit, putaran dan kedudukan panel, serta input bil yang disimulasikan dan tetapan analisis yang disimpan untuk projek itu. Jika anda menggunakan pembantu sembang, kami turut memproses mesej yang anda hantar dan konteks projek yang diperlukan untuk menjawabnya."
       ]
     },
@@ -37,15 +37,15 @@
     "retention": {
       "title": "Berapa Lama Kami Menyimpan Data Anda",
       "body": [
-        "Data projek kekal dalam sistem sehingga anda memadam projek atau memadam akaun anda. Rekod akaun daripada Supabase Auth kekal selagi akaun itu wujud, kerana ia diperlukan untuk mengesahkan anda dan melindungi kerja tersimpan yang dikaitkan dengan akaun itu.",
+        "Data projek kekal dalam sistem sehingga anda memadam projek atau memadam akaun anda. Rekod akaun kekal selagi akaun itu wujud, kerana ia diperlukan untuk mengesahkan anda dan melindungi kerja tersimpan yang dikaitkan dengan akaun itu.",
         "Data cache lokasi yang dikongsi mungkin kekal dalam sistem untuk mengelakkan panggilan Solar API berulang bagi koordinat yang sama, walaupun selepas projek dipadam. Kami menyimpan log operasi dan salinan sandaran hanya selama yang diperlukan untuk keselamatan, pemulihan, dan pentadbiran perkhidmatan, dan kami tidak berniat menyimpan kata laluan, token, atau nilai sensitif lain dalam log."
       ]
     },
     "sharing": {
       "title": "Dengan Siapa Kami Berkongsi Maklumat",
       "body": [
-        "Kami berkongsi data dengan pemproses yang menjalankan aplikasi bagi pihak kami. Ini termasuk Supabase untuk Auth, PostgreSQL, dan Storage; Heroku untuk hosting backend; Google untuk Solar API, Google Maps JavaScript API, dan Vertex AI/Gemini; serta Vercel untuk perkhidmatan eksport atau hosting yang diakses melalui pelayar oleh aplikasi ini.",
-        "Supabase menyimpan rekod akaun, rekod projek, dan fail yang dimuat naik atau diterbitkan semula dalam Storage, dan boleh mengeluarkan URL bertandatangan supaya fail boleh diambil tanpa menjadikan bucket awam. Google menerima lokasi dan konteks projek yang diperlukan untuk pemetaan, analisis solar, dan jawapan sembang, dan data permintaan yang berkaitan mungkin dipindahkan merentas sempadan sebagai sebahagian daripada perkhidmatan tersebut."
+        "Kami berkongsi data dengan pemproses yang menjalankan aplikasi bagi pihak kami. Ini termasuk Neon untuk pangkalan data PostgreSQL; Cloudflare untuk storan objek R2; Heroku untuk hosting backend; Google untuk Solar API, Google Maps JavaScript API, Google Sign-In, dan Vertex AI/Gemini; Resend untuk menghantar e-mel akaun; serta Vercel untuk perkhidmatan eksport atau hosting yang diakses melalui pelayar oleh aplikasi ini.",
+        "Neon menyimpan rekod akaun dan rekod projek. Cloudflare R2 menyimpan fail yang dimuat naik atau diterbitkan semula, dan kami mengeluarkan URL bertandatangan supaya fail boleh diambil tanpa menjadikan bucket awam. Resend menerima alamat e-mel anda dan kandungan e-mel akaun seperti mesej pengesahan dan set semula kata laluan. Google menerima lokasi dan konteks projek yang diperlukan untuk pemetaan, analisis solar, dan jawapan sembang, dan data permintaan yang berkaitan mungkin dipindahkan merentas sempadan sebagai sebahagian daripada perkhidmatan tersebut."
       ]
     },
     "rights": {
@@ -58,21 +58,21 @@
     "cookies": {
       "title": "Kuki & Storan Setempat",
       "body": [
-        "Aplikasi ini menggunakan data sesi Supabase Auth dalam storan pelayar supaya anda kekal log masuk, dan ia menyimpan pilihan antara muka dalam localStorage. Pilihan itu termasuk bahasa, tema, data draf projek, bendera tour-dismissed, coverage-notice-dismissed, dan workbench-hint-dismissed.",
+        "Aplikasi ini menetapkan kuki sesi HTTP-only yang selamat supaya anda kekal log masuk. Kuki itu hanya digunakan untuk mengenal pasti sesi anda dan tidak boleh dibaca oleh skrip dalam halaman. Aplikasi ini juga menyimpan pilihan antara muka dalam localStorage, termasuk bahasa, tema, data draf projek, bendera tour-dismissed, coverage-notice-dismissed, dan workbench-hint-dismissed.",
         "Kami tidak menggunakan kuki pengiklanan. Storan pelayar digunakan hanya untuk memastikan aplikasi mudah digunakan dan untuk mengingati pilihan yang anda buat, dan anda boleh mengosongkannya melalui tetapan pelayar jika anda mahu melog keluar atau menetapkan semula pilihan yang disimpan."
       ]
     },
     "security": {
       "title": "Bagaimana Kami Melindungi Data Anda",
       "body": [
-        "Kami melindungi trafik dengan TLS semasa penghantaran. Kata laluan dikendalikan oleh Supabase Auth sebagai hash, bukan teks biasa, dan akses pangkalan data kami dihadkan dengan row-level security supaya pengguna hanya boleh mencapai rekod sendiri.",
-        "Fail Storage dihantar melalui URL bertandatangan dan bukan bucket awam, dan kami mengelakkan log kata laluan, token, atau muatan sensitif penuh. Tiada sistem yang sempurna, tetapi kami mengehadkan pelaksanaan kepada data minimum yang diperlukan dan menggunakan kawalan akses pada setiap lapisan yang kami kendalikan."
+        "Kami melindungi trafik dengan TLS semasa penghantaran. Kata laluan disimpan sebagai hash, bukan teks biasa, dan setiap permintaan ke API disemak terhadap sesi anda serta dihadkan kepada rekod anda sendiri, jadi satu akaun tidak boleh mencapai projek akaun lain.",
+        "Fail tersimpan dihantar melalui URL bertandatangan dan bukan bucket awam, dan kami mengelakkan log kata laluan, token, atau muatan sensitif penuh. Tiada sistem yang sempurna, tetapi kami mengehadkan pelaksanaan kepada data minimum yang diperlukan dan menggunakan kawalan akses pada setiap lapisan yang kami kendalikan."
       ]
     },
     "transfer": {
       "title": "Pemindahan Data Rentas Sempadan",
       "body": [
-        "Kebanyakan pemproses yang kami gunakan beroperasi di luar Malaysia, jadi data anda mungkin dipindahkan ke dan disimpan di negara lain apabila anda menggunakan aplikasi ini. Ini termasuk perkhidmatan yang dijalankan oleh Supabase, Google, Heroku, dan Vercel.",
+        "Kebanyakan pemproses yang kami gunakan beroperasi di luar Malaysia, jadi data anda mungkin dipindahkan ke dan disimpan di negara lain apabila anda menggunakan aplikasi ini. Ini termasuk perkhidmatan yang dijalankan oleh Neon, Cloudflare, Google, Heroku, Resend, dan Vercel.",
         "Di bawah seksyen 129 PDPA, kami mengambil langkah yang munasabah untuk memastikan penerima tersebut memberikan tahap perlindungan yang secara munasabah setara dengan keperluan Malaysia bagi data yang mereka proses untuk kami. Kami juga mengehadkan data yang dihantar ke perkhidmatan tersebut kepada apa yang diperlukan untuk ciri yang anda gunakan."
       ]
     },

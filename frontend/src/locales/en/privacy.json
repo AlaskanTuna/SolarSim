@@ -2,7 +2,7 @@
   "header": {
     "title": "Data Privacy & Security",
     "subtitle": "How SolarSim collects, uses, and protects your personal information under Malaysia's Personal Data Protection Act 2010 (PDPA).",
-    "lastUpdated": "Last updated: 5 May 2026"
+    "lastUpdated": "Last updated: 30 July 2026"
   },
   "tableOfContents": "On this page",
   "sections": {
@@ -16,7 +16,7 @@
     "dataCollected": {
       "title": "Information We Collect",
       "body": [
-        "We collect your account email and a password hash through Supabase Auth when you sign up with email and password. If you sign in with Google, Supabase also gives us the display name and email address attached to that account.",
+        "We collect your account email and a password hash when you sign up with email and password. Authentication runs inside the app itself, and these records are stored in our own database. If you sign in with Google, Google also gives us the display name and email address attached to that account.",
         "We also collect project data you create or edit, including the project name, building coordinates, selected location status, edited solar panel layout, panel rotation and position, and the simulated billing inputs and saved analysis settings tied to that project. If you use the chat assistant, we also process the message you send and the project context needed to answer it."
       ]
     },
@@ -37,15 +37,15 @@
     "retention": {
       "title": "How Long We Keep Your Data",
       "body": [
-        "Project data stays in the system until you delete the project or delete your account. Account records from Supabase Auth remain as long as the account exists, because they are needed to authenticate you and protect the saved work linked to that account.",
+        "Project data stays in the system until you delete the project or delete your account. Account records remain as long as the account exists, because they are needed to authenticate you and protect the saved work linked to that account.",
         "Shared location cache data may remain in the system to avoid repeated Solar API calls for the same coordinates, even after a project is removed. We keep operational logs and backup copies only for as long as needed for security, recovery, and service administration, and we do not intend to keep passwords, tokens, or other sensitive values in logs."
       ]
     },
     "sharing": {
       "title": "Who We Share Information With",
       "body": [
-        "We share data with processors that operate the app on our behalf. These include Supabase for Auth, PostgreSQL, and Storage; Heroku for backend hosting; Google for Solar API, Google Maps JavaScript API, and Vertex AI/Gemini; and Vercel for the browser-facing export or hosting service used by the app.",
-        "Supabase stores account records, project records, and uploaded or derived files in Storage, and may issue signed URLs so files can be fetched without making buckets public. Google receives the location and project context needed for mapping, solar analysis, and chat responses, and the relevant request data may be sent across borders as part of those services."
+        "We share data with processors that operate the app on our behalf. These include Neon for the PostgreSQL database; Cloudflare for R2 object storage; Heroku for backend hosting; Google for Solar API, Google Maps JavaScript API, Google Sign-In, and Vertex AI/Gemini; Resend for sending account emails; and Vercel for the browser-facing export or hosting service used by the app.",
+        "Neon stores account records and project records. Cloudflare R2 stores uploaded or derived files, and we issue signed URLs so those files can be fetched without making the bucket public. Resend receives your email address and the contents of account emails such as verification and password-reset messages. Google receives the location and project context needed for mapping, solar analysis, and chat responses, and the relevant request data may be sent across borders as part of those services."
       ]
     },
     "rights": {
@@ -58,21 +58,21 @@
     "cookies": {
       "title": "Cookies & Local Storage",
       "body": [
-        "The app uses Supabase Auth session data in browser storage so you stay signed in, and it stores UI preferences in localStorage. Those preferences include locale, theme, project draft data, tour-dismissed flags, coverage-notice-dismissed, and workbench-hint-dismissed.",
+        "The app sets a secure, HTTP-only session cookie so you stay signed in. That cookie is used only to identify your session and cannot be read by scripts in the page. The app also stores UI preferences in localStorage, including locale, theme, project draft data, tour-dismissed flags, coverage-notice-dismissed, and workbench-hint-dismissed.",
         "We do not use advertising cookies. Browser storage is used only to keep the app usable and to remember choices you make, and you can clear it through your browser settings if you want to sign out or reset saved preferences."
       ]
     },
     "security": {
       "title": "How We Protect Your Data",
       "body": [
-        "We protect traffic with TLS in transit. Passwords are handled by Supabase Auth as hashes, not as plain text, and our database access is restricted with row-level security so users can only reach their own records.",
-        "Storage files are delivered with signed URLs instead of public buckets, and we avoid logging passwords, tokens, or full sensitive payloads. No system is perfect, but we keep the implementation limited to the minimum data needed and use access controls at every layer we control."
+        "We protect traffic with TLS in transit. Passwords are stored as hashes, never as plain text, and every request to the API is checked against your session and scoped to your own records, so one account cannot reach another account's projects.",
+        "Stored files are delivered with signed URLs instead of public buckets, and we avoid logging passwords, tokens, or full sensitive payloads. No system is perfect, but we keep the implementation limited to the minimum data needed and use access controls at every layer we control."
       ]
     },
     "transfer": {
       "title": "Cross-Border Data Transfer",
       "body": [
-        "Most of the processors we use operate outside Malaysia, so your data may be transferred to and stored in other countries when you use the app. This includes the services run by Supabase, Google, Heroku, and Vercel.",
+        "Most of the processors we use operate outside Malaysia, so your data may be transferred to and stored in other countries when you use the app. This includes the services run by Neon, Cloudflare, Google, Heroku, Resend, and Vercel.",
         "Under PDPA section 129, we take reasonable steps to make sure those recipients provide a level of protection that is reasonably comparable to Malaysian requirements for the data they process for us. We also limit the data sent to those services to what is needed for the feature you are using."
       ]
     },

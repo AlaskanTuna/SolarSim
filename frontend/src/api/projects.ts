@@ -42,7 +42,7 @@ export type ProjectAnalysisConfig = StoredAnalysisConfigDto
  *
  * `rgbSignedUrl` and `imageGeoTransform` are populated only on the `/pdf-data`
  * endpoint and let the PDF route render the panel layout over the satellite
- * image without holding a Supabase session.
+ * image without holding an authenticated session.
  */
 export type ProjectResponse = {
   id: string
@@ -135,7 +135,7 @@ export type PdfExportToken = { token: string; expiresAt: string }
 
 /**
  * Mints a one-shot PDF token. Used because the headless PDF renderer (a
- * Vercel function with no Supabase cookie) can't carry the user's session.
+ * Vercel function with no session cookie) can't carry the user's session.
  */
 export function requestPdfExportToken(id: string) {
   return apiFetch<PdfExportToken>(`/projects/${id}/pdf-token`, { method: 'POST' })
