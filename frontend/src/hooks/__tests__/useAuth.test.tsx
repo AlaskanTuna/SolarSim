@@ -160,7 +160,12 @@ describe('AuthProvider', () => {
       name: 'member@example.com',
       password: 'password'
     })
-    expect(signInSocialMock).toHaveBeenCalledWith({ provider: 'google', callbackURL: '/dashboard' })
+    // Must be absolute: a relative callbackURL resolves against Better Auth's
+    // baseURL (the API origin), which in dev is the backend and 404s.
+    expect(signInSocialMock).toHaveBeenCalledWith({
+      provider: 'google',
+      callbackURL: `${window.location.origin}/dashboard`
+    })
   })
 
   it('surfaces and removes OAuth callback errors', async () => {

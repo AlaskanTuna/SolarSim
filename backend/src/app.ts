@@ -66,9 +66,12 @@ app.use(
     }
   })
 )
+// Logger first so auth requests are visible too — the Better Auth handler must
+// precede express.json() to receive a raw body, which previously put it ahead of
+// the logger and left every sign-in and OAuth callback unlogged.
+app.use(requestLogger)
 app.all('/api/auth/*splat', toNodeHandler(auth))
 app.use(express.json())
-app.use(requestLogger)
 
 app.use('/api/health', healthRouter)
 app.use('/api/locations', locationsRouter)
