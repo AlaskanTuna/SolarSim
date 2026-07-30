@@ -94,7 +94,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signInWithGoogle = useCallback(async () => {
-    const { error } = await authClient.signIn.social({ provider: 'google', callbackURL: '/dashboard' })
+    // Absolute, not relative: Better Auth resolves a relative callbackURL against
+    // its own baseURL (the API origin), which in dev is the backend on :3001 and
+    // does not serve the SPA. Matches the origin-based redirect this replaced.
+    const { error } = await authClient.signIn.social({
+      provider: 'google',
+      callbackURL: `${window.location.origin}/dashboard`
+    })
     return { error: toAuthError(error) }
   }, [])
 

@@ -37,7 +37,7 @@ export const renderPasswordResetEmail = (url: string): RenderedEmail => {
     <style>
       body { margin: 0; padding: 0; background: #fdf9f4; font-family: 'Work Sans', 'Segoe UI', system-ui, -apple-system, sans-serif; color: #1c1917; }
       table { border-collapse: collapse; }
-      .wrapper { width: 100%; background: #fdf9f4; padding: 40px 16px; }
+      .wrapper { background: #fdf9f4; padding: 40px 16px; }
       .card { max-width: 560px; margin: 0 auto; background: #ffffff; border: 1px solid #efe5d9; border-radius: 18px; overflow: hidden; box-shadow: 0 18px 48px rgba(154, 52, 18, 0.1); }
       .header { position: relative; background: radial-gradient(circle at 18% 28%, rgba(251, 146, 60, 0.32) 0, rgba(251, 146, 60, 0) 34%), linear-gradient(135deg, #fff7ed 0%, #ffedd5 48%, #ffffff 100%); border-bottom: 1px solid #fed7aa; padding: 30px 32px; }
       .header::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: linear-gradient(90deg, #ea580c 0%, #f59e0b 48%, #16a34a 100%); }
