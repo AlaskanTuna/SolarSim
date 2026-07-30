@@ -50,7 +50,9 @@ temp/
 # ==========================================================================
 graphify-out/
 
-# Vendored pm-workflow skill. Published as-is and replaced wholesale by its own
-# updater, so reformatting it would churn against every upgrade.
+# Vendored agent skills. Each is replaced wholesale by its own updater, so
+# reformatting them would churn against every upgrade. Scoped to the whole
+# directory rather than named skills: the set changes over time, and only
+# pm-workflow is tracked — enumerating the rest would leak local-only paths.
 # ==========================================================================
-.agents/skills/pm-workflow/
+.agents/skills/
