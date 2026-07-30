@@ -1,24 +1,31 @@
 /**
- * Supabase Storage wrapper for generated Solar API assets.
+ * Cloudflare R2 storage wrapper for generated Solar API assets.
  *
  * Centralises uploads, downloads, and signed URL creation for the shared
  * GeoTIFF/PNG bucket used by the location pipeline.
  */
 
-import { supabase } from '../config/supabase.js'
-
-const BUCKET = 'geotiffs'
+import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3'
+import { getSignedUrl as createPresignedUrl } from '@aws-sdk/s3-request-presigner'
+import { env } from '../config/env.js'
+import { r2 } from '../config/r2.js'
 
 /**
  * Uploads a blob to the shared storage bucket, replacing any existing object.
  *
  * @param storagePath - Bucket-relative object path
  * @param buffer - File contents to store
- * @param contentType - MIME type sent to Supabase Storage
+ * @param contentType - MIME type stored with the R2 object
  */
 export async function uploadToStorage(storagePath: string, buffer: Buffer, contentType: string): Promise<void> {
-  const { error } = await supabase.storage.from(BUCKET).upload(storagePath, buffer, { contentType, upsert: true })
-  if (error) throw new Error(`Storage upload failed for ${storagePath}: ${error.message}`)
+  try {
+    await r2.send(
+      new PutObjectCommand({ Bucket: env.R2_BUCKET, Key: storagePath, Body: buffer, ContentType: contentType })
+    )
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    throw new Error(`Storage upload failed for ${storagePath}: ${message}`)
+  }
 }
 
 /**
@@ -28,9 +35,15 @@ export async function uploadToStorage(storagePath: string, buffer: Buffer, conte
  * @returns Raw object bytes as an ArrayBuffer
  */
 export async function downloadFromStorage(storagePath: string): Promise<ArrayBuffer> {
-  const { data, error } = await supabase.storage.from(BUCKET).download(storagePath)
-  if (error) throw new Error(`Storage download failed for ${storagePath}: ${error.message}`)
-  return data.arrayBuffer()
+  try {
+    const response = await r2.send(new GetObjectCommand({ Bucket: env.R2_BUCKET, Key: storagePath }))
+    if (!response.Body) throw new Error('R2 response body is missing')
+
+    return new Uint8Array(await response.Body.transformToByteArray()).buffer
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    throw new Error(`Storage download failed for ${storagePath}: ${message}`)
+  }
 }
 
 /**
@@ -38,10 +51,15 @@ export async function downloadFromStorage(storagePath: string): Promise<ArrayBuf
  *
  * @param storagePath - Bucket-relative object path
  * @param expiresIn - URL lifetime in seconds
- * @returns Temporary public URL for reading the object
+ * @returns Temporary signed URL for reading the object
  */
 export async function getSignedUrl(storagePath: string, expiresIn = 3600): Promise<string> {
-  const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(storagePath, expiresIn)
-  if (error) throw new Error(`Failed to create signed URL for ${storagePath}: ${error.message}`)
-  return data.signedUrl
+  try {
+    return await createPresignedUrl(r2, new GetObjectCommand({ Bucket: env.R2_BUCKET, Key: storagePath }), {
+      expiresIn
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    throw new Error(`Failed to create signed URL for ${storagePath}: ${message}`)
+  }
 }
