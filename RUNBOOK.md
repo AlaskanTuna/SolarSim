@@ -147,7 +147,8 @@ Copy these values from Supabase Settings:
 - Project URL -> `SUPABASE_URL`
 - anon public key -> `SUPABASE_ANON_KEY`
 - service_role key -> `SUPABASE_SERVICE_ROLE_KEY`
-- database connection string -> `SUPABASE_DATABASE_URL`
+
+Postgres and object storage no longer come from Supabase. Take the database connection strings from Neon (`neon connection-string <branch>`, once pooled and once without `--pooled`, into `DATABASE_URL` and `DIRECT_URL`) and the four `R2_*` values from Cloudflare R2.
 
 Create the bucket that stores Solar API GeoTIFFs. The backend expects the bucket name `geotiffs`.
 
@@ -215,10 +216,15 @@ Set the root `.env` from the table below. `VITE_*` variables are baked into the 
 | `CHAT_MODEL`                | Gemini model name                                           | Chat boots with the wrong or default model       |
 | `GOOGLE_OAUTH_CLIENT_ID`    | GCP OAuth client                                            | Google sign-in fails                             |
 | `GOOGLE_OAUTH_SECRET`       | Same OAuth client                                           | Google sign-in fails                             |
-| `SUPABASE_URL`              | Supabase Settings -> API                                    | Auth, storage, and backend client creation fail  |
+| `DATABASE_URL`              | Neon pooled connection string (host ends in `-pooler`)      | Runtime database access fails                    |
+| `DIRECT_URL`                | Neon unpooled connection string                             | Prisma Migrate cannot run                        |
+| `R2_ACCOUNT_ID`             | Cloudflare account ID; forms the S3 endpoint hostname       | Storage client cannot resolve the R2 endpoint    |
+| `R2_ACCESS_KEY_ID`          | R2 API token, Object Read & Write on the bucket             | GeoTIFF upload and download fail                 |
+| `R2_SECRET_ACCESS_KEY`      | Secret half of the same R2 API token                        | GeoTIFF upload and download fail                 |
+| `R2_BUCKET`                 | R2 bucket name holding the cached GeoTIFFs and imagery      | Storage paths resolve to a nonexistent bucket    |
+| `SUPABASE_URL`              | Supabase Settings -> API                                    | Auth and backend client creation fail            |
 | `SUPABASE_ANON_KEY`         | Supabase Settings -> API                                    | Frontend Supabase client cannot sign in          |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Settings -> API                                    | Backend cannot read/write privileged data        |
-| `SUPABASE_DATABASE_URL`     | Supabase Settings -> Database                               | Prisma migrations and runtime DB access fail     |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Settings -> API                                    | Backend cannot verify bearer tokens              |
 | `VITE_SUPABASE_URL`         | `SUPABASE_URL` via dotenv-expand                            | Frontend Supabase client cannot boot             |
 | `VITE_SUPABASE_ANON_KEY`    | `SUPABASE_ANON_KEY` via dotenv-expand                       | Frontend auth fails                              |
 | `SITE_URL`                  | Final public origin, local or production                    | Supabase redirect links point to the wrong place |
@@ -301,10 +307,15 @@ heroku config:set \
   GOOGLE_CLOUD_LOCATION="global" \
   GEMINI_API_KEY="..." \
   CHAT_MODEL="gemini-3.1-flash-lite-preview" \
+  DATABASE_URL="postgresql://...-pooler...neon.tech/neondb?sslmode=require" \
+  DIRECT_URL="postgresql://...neon.tech/neondb?sslmode=require" \
+  R2_ACCOUNT_ID="..." \
+  R2_ACCESS_KEY_ID="..." \
+  R2_SECRET_ACCESS_KEY="..." \
+  R2_BUCKET="solarsim" \
   SUPABASE_URL="https://<supabase-ref>.supabase.co" \
   SUPABASE_ANON_KEY="..." \
   SUPABASE_SERVICE_ROLE_KEY="..." \
-  SUPABASE_DATABASE_URL="postgresql://..." \
   VITE_SUPABASE_URL="https://<supabase-ref>.supabase.co" \
   VITE_SUPABASE_ANON_KEY="..." \
   SITE_URL="https://solarsim.tech" \
@@ -506,10 +517,15 @@ Supabase project deletion is still dashboard-only. After deleting the hosted pro
 | `CHAT_MODEL`                | Gemini model name                | Chat model selector          |
 | `GOOGLE_OAUTH_CLIENT_ID`    | GCP OAuth client                 | Google sign-in               |
 | `GOOGLE_OAUTH_SECRET`       | GCP OAuth client                 | Google sign-in               |
+| `DATABASE_URL`              | Neon pooled connection string    | Prisma runtime queries       |
+| `DIRECT_URL`                | Neon unpooled connection string  | Prisma Migrate               |
+| `R2_ACCOUNT_ID`             | Cloudflare account ID            | R2 S3 endpoint hostname      |
+| `R2_ACCESS_KEY_ID`          | R2 API token                     | GeoTIFF storage              |
+| `R2_SECRET_ACCESS_KEY`      | R2 API token                     | GeoTIFF storage              |
+| `R2_BUCKET`                 | R2 bucket name                   | GeoTIFF storage              |
 | `SUPABASE_URL`              | Supabase settings                | Backend + auth               |
 | `SUPABASE_ANON_KEY`         | Supabase settings                | Frontend auth                |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase settings                | Backend privileged access    |
-| `SUPABASE_DATABASE_URL`     | Supabase DB connection string    | Prisma                       |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase settings                | Backend token verification   |
 | `VITE_SUPABASE_URL`         | Derived from `SUPABASE_URL`      | Frontend auth                |
 | `VITE_SUPABASE_ANON_KEY`    | Derived from `SUPABASE_ANON_KEY` | Frontend auth                |
 | `SITE_URL`                  | Final public origin              | Supabase auth redirects      |
