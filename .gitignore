@@ -193,6 +193,10 @@ temp/
 design-system/
 *.tsbuildinfo
 settings.local.json
+# Exception: the pm-workflow skill ships a settings template as part of its
+# payload. It contains no machine-local state, and without it the published
+# skill is incomplete.
+!.agents/skills/pm-workflow/templates/settings.local.json
 
 # Graphify knowledge graph (local build artifacts; only the queryable graph
 # and its human-readable report are committed)
