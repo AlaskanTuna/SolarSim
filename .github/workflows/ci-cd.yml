@@ -79,9 +79,80 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      # Captured before the push so the verify step can tell the new release apart
+      # from the one already live, rather than reading a stale "succeeded".
+      - name: Record the current Heroku release
+        id: before
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+        run: |
+          version=$(curl -sS \
+            -H "Accept: application/vnd.heroku+json; version=3" \
+            -H "Authorization: Bearer ${HEROKU_API_KEY}" \
+            -H "Range: version ..; max=1, order=desc" \
+            "https://api.heroku.com/apps/${HEROKU_APP_NAME}/releases" | jq -r '.[0].version // 0')
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "Current release: v${version}"
+
       - name: Deploy current main commit to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
           HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
         run: |
           git push --force "https://heroku:${HEROKU_API_KEY}@git.heroku.com/${HEROKU_APP_NAME}.git" HEAD:main
+
+      # `git push` to Heroku exits 0 once the SLUG BUILDS. The `release:` command in
+      # the Procfile runs afterwards, and Heroku does not promote the slug if it
+      # fails — so without this step a broken release is invisible and CI reports
+      # green while production silently serves the previous slug. That happened for
+      # six consecutive deploys (v231-v236, 29-30/07/26) when DIRECT_URL was unset.
+      - name: Verify the Heroku release succeeded
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+          PREVIOUS_VERSION: ${{ steps.before.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          deadline=$((SECONDS + 900))
+
+          while :; do
+            release=$(curl -sS \
+              -H "Accept: application/vnd.heroku+json; version=3" \
+              -H "Authorization: Bearer ${HEROKU_API_KEY}" \
+              -H "Range: version ..; max=1, order=desc" \
+              "https://api.heroku.com/apps/${HEROKU_APP_NAME}/releases")
+
+            version=$(jq -r '.[0].version // 0' <<<"$release")
+            status=$(jq -r '.[0].status // "unknown"' <<<"$release")
+
+            if [ "${version}" -le "${PREVIOUS_VERSION}" ]; then
+              echo "Waiting for a release newer than v${PREVIOUS_VERSION}..."
+            else
+              echo "Release v${version}: ${status}"
+
+              case "${status}" in
+                succeeded)
+                  echo "Release v${version} succeeded and the slug is live."
+                  exit 0
+                  ;;
+                failed)
+                  echo "::error::Heroku release v${version} failed - the slug was NOT promoted and production still serves the previous release."
+                  output_url=$(jq -r '.[0].output_stream_url // empty' <<<"$release")
+                  if [ -n "${output_url}" ]; then
+                    echo "--- release command output ---"
+                    curl -sS "${output_url}" || true
+                  fi
+                  exit 1
+                  ;;
+              esac
+            fi
+
+            if [ "${SECONDS}" -ge "${deadline}" ]; then
+              echo "::error::Timed out after 15 minutes waiting for the Heroku release to settle (last seen: v${version} ${status})."
+              exit 1
+            fi
+
+            sleep 10
+          done
