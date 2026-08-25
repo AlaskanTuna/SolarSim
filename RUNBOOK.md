@@ -108,6 +108,33 @@ pnpm typecheck
 
 ✅ Validation: `pnpm typecheck` exits cleanly.
 
+### 2.1 Run locally with Docker (optional)
+
+The repo ships a multi-stage `Dockerfile` and a `docker-compose.yml` that pairs the backend with a local Postgres 17, so you can run the stack without provisioning Neon. Everything else — R2, Google, Resend — still comes from your `.env`.
+
+```bash
+cp .env.example .env      # fill in R2, Google, Resend, Better Auth values
+docker compose up -d --build
+curl -s -o /dev/null -w '%{http_code}\n' http://localhost:3001/api/health
+```
+
+Compose runs `prisma migrate deploy` before starting the server, mirroring the `Procfile` release phase. The image builds `shared` → `prisma generate` → `backend` → `frontend`, then serves the API and the built SPA from one process, exactly as the Heroku dyno does.
+
+[!NOTE]
+Three details that are easy to trip over:
+
+- Postgres is published on host port **55432**, not 5432 — 5432 and 5433 commonly collide with a locally installed Postgres. Inside the compose network it is still 5432.
+- `NODE_ENV: production` is pinned under `environment:` on purpose. `environment` wins over `env_file`, and the repo `.env` ships `NODE_ENV` empty — without the pin the API answers but the SPA 404s, because the `express.static` branch in `backend/src/app.ts` never runs.
+- If `docker compose up` fails because a port is already bound, run `docker compose down -v` before retrying. A partially-started stack can leave the backend unable to reach Postgres, failing with `P1001: Can't reach database server`.
+
+To stop and remove the local database volume:
+
+```bash
+docker compose down -v
+```
+
+✅ Validation: `GET http://localhost:3001/api/health` returns 200, and `http://localhost:3001/` serves the SPA.
+
 ## 3. Provision cloud resources
 
 [!NOTE]
