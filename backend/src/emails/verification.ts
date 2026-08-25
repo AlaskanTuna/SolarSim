@@ -24,7 +24,7 @@ export const renderVerificationEmail = (url: string): RenderedEmail => {
   const logoUrl = `${env.EMAIL_ASSET_BASE_URL}/email-logo.png`
 
   return {
-    subject: 'Confirm Your SolarSim Account',
+    subject: 'Confirm your SolarSim account',
     html: `<!doctype html>
 <html>
   <head>

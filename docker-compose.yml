@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: solarsim
+      POSTGRES_PASSWORD: solarsim
+      POSTGRES_DB: solarsim
+    # 55432 on the host: 5432/5433 commonly collide with a locally installed
+    # Postgres. Inside the compose network the port is still 5432.
+    ports:
+      - '55432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U solarsim -d solarsim']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: .
+    env_file:
+      - .env
+    environment:
+      # `environment` wins over `env_file`. The repo .env ships NODE_ENV empty, which
+      # would override the image's ENV and silently disable the express.static branch
+      # in backend/src/app.ts, so the API answers but the SPA 404s.
+      NODE_ENV: production
+      DATABASE_URL: postgresql://solarsim:solarsim@postgres:5432/solarsim
+      DIRECT_URL: postgresql://solarsim:solarsim@postgres:5432/solarsim
+    command: sh -c 'node_modules/.bin/prisma migrate deploy --schema prisma/schema.prisma && node backend/dist/server.js'
+    ports:
+      - '3001:3001'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:
