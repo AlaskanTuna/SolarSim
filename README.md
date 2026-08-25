@@ -43,8 +43,8 @@ _Search a roof. Tweak the layout. Get a NEM-accurate savings report. As easy as 
 > [!NOTE]
 > SolarSim is an **assessment** tool. It produces an estimate report, not a quotation, not a contract, and not an installation order. Final pricing and feasibility always come from a licensed Malaysian installer.
 
-> [!WARNING]
-> **The live deployment is currently offline.** The database has moved to Neon; the remaining hosting cutover for `solarsim.tech` is still in progress. Everything below describes the product — clone it and run the local quickstart to see it working. Progress is tracked in the [v1.1 — Back Online](https://github.com/AlaskanTuna/SolarSim/milestone/1) milestone.
+> [!NOTE]
+> **[solarsim.tech](https://solarsim.tech) is live again.** The migration off Supabase is complete — Postgres on Neon, object storage on Cloudflare R2, self-hosted Better Auth, and transactional email over the Resend API. The [v1.1 — Back Online](https://github.com/AlaskanTuna/SolarSim/milestone/1) milestone tracked that work and is closed.
 
 ## Walkthrough
 
