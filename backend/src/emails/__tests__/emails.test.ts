@@ -21,11 +21,11 @@ const escapedUrl = 'https://app.example/auth?next=dashboard&amp;mode=&quot;new&q
 const renderers = [
   {
     render: renderVerificationEmail,
-    subject: 'Confirm Your SolarSim Account'
+    subject: 'Confirm your SolarSim account'
   },
   {
     render: renderPasswordResetEmail,
-    subject: 'Reset your Solar Layout Generator password'
+    subject: 'Reset your SolarSim password'
   },
   {
     render: renderEmailChangeEmail,
@@ -33,7 +33,7 @@ const renderers = [
   },
   {
     render: renderInviteEmail,
-    subject: "You've been invited to Solar Layout Generator"
+    subject: "You've been invited to SolarSim"
   }
 ]
 
