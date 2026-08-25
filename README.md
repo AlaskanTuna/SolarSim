@@ -1,3 +1,5 @@
+<a id="top"></a>
+
 <div align="center">
 
 <img src="frontend/public/logo-dark.png" alt="SolarSim logo" width="120" />
@@ -46,13 +48,19 @@ _Search a roof. Tweak the layout. Get a NEM-accurate savings report. As easy as 
 > [!NOTE]
 > **[solarsim.tech](https://solarsim.tech) is live again.** The migration off Supabase is complete — Postgres on Neon, object storage on Cloudflare R2, self-hosted Better Auth, and transactional email over the Resend API. The [v1.1 — Back Online](https://github.com/AlaskanTuna/SolarSim/milestone/1) milestone tracked that work and is closed.
 
+<a id="walkthrough"></a>
+
 ## Walkthrough
 
 https://github.com/AlaskanTuna/SolarSim/releases/download/v1.1-walkthrough/solarsim-walkthrough.mp4
 
 The three-page flow: **Map** (search a roof, one Solar API call, cached forever) → **Workbench** (drag, rotate, and delete panels on a Konva canvas, with flux resampled locally) → **Analysis** (NEM Rakyat 3.0 billing simulation and PDF export).
 
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
+
 ---
+
+<a id="at-a-glance"></a>
 
 ## ✨ At a Glance
 
@@ -64,7 +72,11 @@ The three-page flow: **Map** (search a roof, one Solar API call, cached forever)
   </tr>
 </table>
 
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
+
 ---
+
+<a id="screenshots"></a>
 
 ## 🖼 Screenshots
 
@@ -81,13 +93,22 @@ The three-page flow: **Map** (search a roof, one Solar API call, cached forever)
   </tr>
 </table>
 
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
+
 ---
+
+<a id="what-solarsim-does"></a>
 
 ## 🧠 What SolarSim Does
 
 ### The Problem
 
-Malaysian homeowners interested in rooftop solar have limited access to quick, data-driven preliminary assessments. Existing options are either manual on-site surveys (expensive and slow) or generic online calculators that lack roof-specific data. There is no tool that lets users see a proposed panel layout on _their actual rooftop_, interactively adjust it, and immediately understand the financial impact under Malaysia's NEM Rakyat 3.0 scheme.
+Malaysian homeowners have no quick, data-driven way to assess rooftop solar before committing. The two existing options each give up something essential:
+
+- **Manual on-site surveys** — roof-specific and accurate, but expensive and slow.
+- **Generic online calculators** — instant, but blind to the actual roof.
+
+Neither lets a homeowner see a proposed panel layout on _their actual rooftop_, adjust it interactively, and immediately read the financial impact under Malaysia's NEM Rakyat 3.0 scheme.
 
 ### Project Objectives
 
@@ -104,7 +125,11 @@ Malaysian homeowners interested in rooftop solar have limited access to quick, d
 
 User assumptions: non-technical, unfamiliar with solar terminology, accessing via desktop browser (primary) or mobile browser (secondary).
 
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
+
 ---
+
+<a id="feature-matrix"></a>
 
 ## 🏗 Feature Matrix
 
@@ -122,7 +147,11 @@ User assumptions: non-technical, unfamiliar with solar terminology, accessing vi
 | 🔐  | **Better Auth**               | Self-hosted email/password and Google OAuth, with per-user quota enforcement and remember-email on sign-in.                                                   |
 | 💬  | **Sol Chatbot Assistant**     | Project-aware chat grounded in your project's data and a curated solar knowledge bible. Streams over SSE, page-aware, EN/MS/ZH, prompt-injection guarded.     |
 
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
+
 ---
+
+<a id="sdg-alignment"></a>
 
 ## 🌏 Why It Matters: SDG Alignment
 
@@ -132,7 +161,11 @@ SolarSim is built around one product stance: **Malaysian homeowners should be ab
 | ---------------------------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | <img src="https://img.shields.io/badge/07-fcc30b?style=flat-square" /> | **Affordable and Clean Energy** | Lowering the friction between curiosity and a real solar quotation accelerates household adoption. Every projection cites tariff schedules so the upside number is verifiable, not sales-pitchy. |
 
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
+
 ---
+
+<a id="architecture"></a>
 
 ## 🏛 Architecture
 
@@ -225,7 +258,11 @@ flowchart LR
 
 </details>
 
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
+
 ---
+
+<a id="tech-stack"></a>
 
 ## 🧰 Tech Stack
 
@@ -244,7 +281,11 @@ flowchart LR
 | PDF Service     | Vercel function · Puppeteer · Chromium (headless)                            | Sandboxed off the Heroku dyno, signed-token access              |
 | Deploy          | Heroku (web dyno) · Vercel (PDF function) · GitHub Actions CI/CD             | `pnpm` build on Heroku via `heroku-postbuild`                   |
 
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
+
 ---
+
+<a id="getting-started"></a>
 
 ## 🚀 Getting Started
 
@@ -302,7 +343,11 @@ Visit `http://localhost:5173` → sign up → click the confirmation email → y
 | `pnpm db:seed`           | Seed tariff config data                                             |
 | `docker compose up -d`   | Run the backend + a local Postgres in containers (see RUNBOOK §2.1) |
 
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
+
 ---
+
+<a id="deployment"></a>
 
 ## ☁ Deployment
 
@@ -327,29 +372,45 @@ The production stack is **two services**: a Heroku web dyno (frontend bundle + E
 > [!IMPORTANT]
 > If the live URLs or commands drift, the `Procfile`, `heroku-postbuild` script in `package.json`, and `.github/workflows/ci-cd.yml` are the source of truth, not this README.
 
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
+
 ---
+
+<a id="disclaimers"></a>
 
 ## 🔒 Disclaimers
 
 > [!CAUTION]
 > All figures in SolarSim are **estimates** based on satellite-derived flux data. Real-world generation and savings can differ by 10 to 15 percent or more depending on shading, soiling, inverter behaviour, and weather variance not captured in the input data.
 
-- 🧾 **Tariff Provenance.** Every kWh figure traces back to gazetted Suruhanjaya Tenaga and TNB schedules. RP4 brackets, EEI bands, AFA, SST, and the RE Fund are seeded as typed config, not narrated by an LLM.
-- 🛰 **Imagery Scope.** Rooftop imagery and flux rasters come exclusively from the Google Solar API and stay scoped to the user's project. SolarSim does not scrape, syndicate, or republish any third-party data.
-- ⚖ **Layout Boundary.** The Workbench plans where panels could go, not whether they should. Purlin spacing, MCB sizing, inverter placement, and roof-load calculations are out of scope and remain the installer's responsibility.
-- 🔑 **Data Ownership.** Every API request is authorized against the Better Auth session, and Prisma queries are scoped to that user. Account deletion cascades and removes the user's projects, cached imagery, and saved analyses.
-- 🛡 **PDF Token Security.** PDF exports use signed tokens that expire in 60 seconds and are scoped to a single project, so leaked URLs cannot be replayed by anyone else.
+| Disclaimer                | What It Means                                                                                                                                                                                              |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 🧾 **Tariff Provenance**  | Every kWh figure traces back to gazetted Suruhanjaya Tenaga and TNB schedules. RP4 brackets, EEI bands, AFA, SST and the RE Fund are seeded as typed config, not narrated by an LLM.                       |
+| 🛰 **Imagery Scope**      | Rooftop imagery and flux rasters come exclusively from the Google Solar API and stay scoped to the user's project. SolarSim does not scrape, syndicate or republish any third-party data.                  |
+| ⚖ **Layout Boundary**     | The Workbench plans where panels could go, not whether they should. Purlin spacing, MCB sizing, inverter placement and roof-load calculations are out of scope and remain the installer's responsibility.  |
+| 🔑 **Data Ownership**     | Every API request is authorized against the Better Auth session, and Prisma queries are scoped to that user. Account deletion cascades and removes the user's projects, cached imagery and saved analyses. |
+| 🛡 **PDF Token Security** | PDF exports use signed tokens that expire in 60 seconds and are scoped to a single project, so leaked URLs cannot be replayed by anyone else.                                                              |
+
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
 
 ---
+
+<a id="known-limitations"></a>
 
 ## 🧭 Known Limitations
 
-- **Panel placement is approximate.** The Google Solar API derives suggested panel positions from flux heuristics, not true roof-edge segmentation, so a layout occasionally doesn't align cleanly with the actual roof. This is a permanent trade-off rather than an open bug — closing the gap properly would take ML-based roof segmentation or constrained re-optimisation against the roof mask, both research-grade efforts outside this project's scope. The Workbench's drag-and-snap editing exists precisely for this: move a panel and it snaps flush against its neighbours.
-- **Solar API coverage is uneven across Malaysia.** Some addresses, including parts of the Klang Valley, have thin or missing `HIGH`-quality imagery. SolarSim probes for the best available quality before committing to a location and falls back to `BASE` imagery with expanded coverage where possible, surfaced in the UI as an amber "Imagery: BASE" badge — lower-resolution imagery means less precise flux sampling and panel placement.
-- **NEM billing is an estimate, not a utility quote.** The billing engine simulates NEM Rakyat 3.0 self-consumption and export against seeded TNB RP4 tariffs (with EEI, AFA, SST, and RE Fund adjustments). Multi-year Lifecycle projections apply a configurable tariff escalation rate that defaults to 0% — future TNB rate revisions aren't predicted, only modelled if you choose to set one.
-- **Mobile and touch testing is deferred.** The Konva canvas, sidebar, and panel drawer have been verified on desktop and browser devtools emulation, not on real mobile devices. Tracked as an open item.
+| Limitation                                          | Detail & Mitigation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Panel placement is approximate**                  | The Google Solar API derives suggested panel positions from flux heuristics, not true roof-edge segmentation, so a layout occasionally doesn't align cleanly with the actual roof. A permanent trade-off rather than an open bug — closing the gap properly would take ML-based roof segmentation or constrained re-optimisation against the roof mask, both research-grade efforts outside this project's scope. The Workbench's drag-and-snap editing exists precisely for this: move a panel and it snaps flush against its neighbours. |
+| **Solar API coverage is uneven across Malaysia**    | Some addresses, including parts of the Klang Valley, have thin or missing `HIGH`-quality imagery. SolarSim probes for the best available quality before committing to a location and falls back to `BASE` imagery with expanded coverage where possible, surfaced in the UI as an amber **Imagery: BASE** badge. Lower-resolution imagery means less precise flux sampling and panel placement.                                                                                                                                            |
+| **NEM billing is an estimate, not a utility quote** | The billing engine simulates NEM Rakyat 3.0 self-consumption and export against seeded TNB RP4 tariffs, with EEI, AFA, SST and RE Fund adjustments. Multi-year Lifecycle projections apply a configurable tariff escalation rate that defaults to 0% — future TNB rate revisions aren't predicted, only modelled if you choose to set one.                                                                                                                                                                                                 |
+| **Mobile and touch testing is deferred**            | The Konva canvas, sidebar and panel drawer have been verified on desktop and browser devtools emulation, not on real mobile devices. Tracked as an open item.                                                                                                                                                                                                                                                                                                                                                                              |
+
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
 
 ---
+
+<a id="developer"></a>
 
 ## 👤 Developer
 
@@ -363,7 +424,11 @@ The production stack is **two services**: a Heroku web dyno (frontend bundle + E
   </tr>
 </table>
 
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
+
 ---
+
+<a id="project-structure"></a>
 
 ## 📁 Project Structure
 
@@ -408,7 +473,13 @@ SolarSim/
 
 ### Documentation Hygiene
 
-`graphify-out/graph.json` and `graphify-out/GRAPH_REPORT.md` are a generated knowledge graph of this codebase, committed so contributors don't have to rebuild it — do not hand-edit them. Refresh after code changes with `graphify update .` (code-only, no LLM, free). A change that deletes a lot of source can trip its shrink guard; re-run with `--force` if that happens.
+`graphify-out/graph.json` and `graphify-out/GRAPH_REPORT.md` are a generated knowledge graph of this codebase, committed so contributors don't have to rebuild it.
+
+- **Do not hand-edit them.**
+- **Refresh after code changes** with `graphify update .` — code-only, no LLM, free.
+- **A change that deletes a lot of source can trip the shrink guard.** Re-run with `--force` if that happens.
+
+<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
 
 ---
 
