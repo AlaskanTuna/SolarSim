@@ -12,7 +12,7 @@ _Search a roof. Tweak the layout. Get a NEM-accurate savings report. As easy as 
 
 <p>
   <img src="https://img.shields.io/badge/node-24.x-brightgreen?style=flat-square&logo=node.js&logoColor=white" alt="Node.js" />
-  <img src="https://img.shields.io/badge/pnpm-10.33.0-F69220?style=flat-square&logo=pnpm&logoColor=white" alt="pnpm" />
+  <img src="https://img.shields.io/badge/pnpm-10.33.3-F69220?style=flat-square&logo=pnpm&logoColor=white" alt="pnpm" />
   <img src="https://img.shields.io/badge/react-19-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React" />
   <img src="https://img.shields.io/badge/vite-6-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite" />
   <img src="https://img.shields.io/badge/express-5-000000?style=flat-square&logo=express&logoColor=white" alt="Express" />
@@ -240,7 +240,7 @@ flowchart LR
 | Identity & Data | Better Auth · Neon Postgres · Cloudflare R2                                  | Email/password + Google OAuth, API-authorized per-user projects |
 | External APIs   | Google Solar API · Google Maps JavaScript API · Geocoding API                | One Solar call per address, cached forever                      |
 | Chat & GenAI    | @google/genai (Gemini / Vertex AI) · SSE-over-POST streaming                 | Sol assistant with project-grounded prompts, dual-auth fallback |
-| Testing         | Vitest · @testing-library/react · jsdom                                      | Co-located unit tests, 205 passing                              |
+| Testing         | Vitest · @testing-library/react · jsdom                                      | Co-located unit tests, 407 passing                              |
 | PDF Service     | Vercel function · Puppeteer · Chromium (headless)                            | Sandboxed off the Heroku dyno, signed-token access              |
 | Deploy          | Heroku (web dyno) · Vercel (PDF function) · GitHub Actions CI/CD             | `pnpm` build on Heroku via `heroku-postbuild`                   |
 
@@ -258,7 +258,7 @@ flowchart LR
 
 ```bash
 # 1. Install local toolchain
-corepack enable                                   # bundles pnpm 10.33.0 with Node 24
+corepack enable                                   # bundles pnpm 10.33.3 with Node 24
 
 # 2. Clone and install
 git clone https://github.com/AlaskanTuna/SolarSim.git
@@ -281,7 +281,7 @@ Visit `http://localhost:5173` → sign up → click the confirmation email → y
 ### Prerequisites
 
 - **Node.js** `24.x` — [nodejs.org](https://nodejs.org)
-- **pnpm** `10.33.0` (via `corepack enable` — ships with Node 24)
+- **pnpm** `10.33.3` (via `corepack enable` — ships with Node 24)
 - **git**
 - A Neon project, private Cloudflare R2 bucket, Google Cloud project (Solar + Maps + Geocoding APIs enabled), and Resend account. New to these services? Use **[RUNBOOK.md](RUNBOOK.md)** to provision them.
 
@@ -388,17 +388,17 @@ SolarSim/
 │       ├── config/             #   Env, Prisma, Better Auth, and R2 clients
 │       ├── geo/                #   Coordinate transforms, flux sampler, OBB geometry
 │       ├── middleware/         #   Auth, validation, rate-limit, error handler
-│       ├── routes/             #   /locations, /projects, /tariff, /quota, /health
-│       ├── services/           #   Solar API pipeline, location service, PDF token signer
+│       ├── routes/             #   /locations, /projects, /tariff, /quota, /chat, /health
+│       ├── services/           #   Solar API pipeline, location service, chat, PDF token signer
 │       └── app.ts              #   Express app composition
 ├── services/
 │   └── pdf-service/            # Standalone Vercel + Puppeteer PDF function
 ├── prisma/
-│   ├── schema.prisma           # Postgres schema (Location, Project, TariffConfig, Quota)
+│   ├── schema.prisma           # Postgres schema (User/Session/Account, Location, Project, TariffConfig)
 │   └── seed.ts                 # Seeds RP4 + EEI + AFA + RE Fund tariff defaults
-├── tests/
-│   └── smoke/                  # Bash smoke tests (auth-z, end-to-end deploys)
 ├── .github/workflows/          # ci-cd.yml: CI + Heroku auto-deploy
+├── Dockerfile                  # Multi-stage container build (see RUNBOOK section 2.1)
+├── docker-compose.yml          # Backend + local Postgres 17 for offline development
 ├── package.json                # Root workspace orchestrator
 ├── pnpm-workspace.yaml
 └── .env.example
