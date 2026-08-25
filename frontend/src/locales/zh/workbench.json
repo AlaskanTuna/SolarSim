@@ -217,5 +217,18 @@
     "step5Body": "对布局满意了吗？点击「保存并继续」进入节省分析。您随时可以返回调整。",
     "step6Title": "认识 Sol",
     "step6Body": "卡住或想了解更多？点击 Sol，你的太阳能小帮手，可以问任何关于这个布局、节省金额、NEM 净电量积分，或马来西亚太阳能运作方式的问题。"
+  },
+  "toasts": {
+    "recomputingPanelYield": "正在依据已缓存的月度辐照数据重新计算板面发电量……",
+    "groupMoveFailed": "批量移动失败：{{reason}}",
+    "recomputingPanels": "正在重新计算 {{count}} 块板的发电量……",
+    "groupMoveRecomputeFailed": "批量移动重新计算失败，位置已还原。",
+    "recalculatingDimensions": "正在按新的板面尺寸重新计算发电量……",
+    "recomputingBeforeSave": "保存前正在重新计算 {{count}} 块启用板的月度发电量……",
+    "savingLayout": "正在将更新后的布局保存到您的项目……",
+    "overlayLoadFailed": "加载{{mode}}图层失败",
+    "placementMask": "该位置超出了检测到的屋顶范围。",
+    "placementOverlap": "该位置与另一块板重叠。",
+    "placementBounds": "该位置超出了屋顶图像范围。"
   }
 }

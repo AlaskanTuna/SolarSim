@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getOverlayUrl } from '@/api/locations'
 import { notify } from '@/components/ui/toastConfig'
+import { useTranslation } from 'react-i18next'
 
 function useLoadedImage(src: string | undefined) {
   const [image, setImage] = useState<HTMLImageElement | null>(null)
@@ -73,6 +74,7 @@ export function useOverlayImages(
   locationId: string | undefined,
   overlayMode: OverlayMode
 ) {
+  const { t } = useTranslation('workbench')
   const [overlayImageUrl, setOverlayImageUrl] = useState<string | null>(null)
   const [isOverlayLoading, setIsOverlayLoading] = useState(false)
 
@@ -94,7 +96,7 @@ export function useOverlayImages(
       .catch(() => {
         if (!cancelled) {
           setOverlayImageUrl(null)
-          notify.error(`Failed to load ${overlayMode} overlay`)
+          notify.error(t('toasts.overlayLoadFailed', { mode: overlayMode }))
         }
       })
       .finally(() => {

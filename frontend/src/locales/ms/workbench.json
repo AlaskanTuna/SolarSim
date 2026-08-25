@@ -217,5 +217,18 @@
     "step5Body": "Berpuas hati dengan susun atur? Klik \"Simpan & Teruskan\" untuk beralih ke analisis penjimatan. Anda sentiasa boleh kembali untuk membuat pelarasan.",
     "step6Title": "Kenali Sol",
     "step6Body": "Tersangkut atau ingin tahu lebih lanjut? Tekan Sol, pemandu solar mesra anda, untuk bertanya tentang susun atur ini, penjimatan anda, kredit NEM, atau cara solar berfungsi di Malaysia."
+  },
+  "toasts": {
+    "recomputingPanelYield": "Mengira semula hasil panel daripada data fluks bulanan tersimpan...",
+    "groupMoveFailed": "Pemindahan kumpulan gagal: {{reason}}",
+    "recomputingPanels": "Mengira semula hasil untuk {{count}} panel...",
+    "groupMoveRecomputeFailed": "Gagal mengira semula pemindahan kumpulan. Kedudukan telah dikembalikan.",
+    "recalculatingDimensions": "Mengira semula tenaga untuk dimensi panel baharu...",
+    "recomputingBeforeSave": "Mengira semula tenaga bulanan untuk {{count}} panel aktif sebelum menyimpan...",
+    "savingLayout": "Menyimpan susun atur yang dikemas kini ke projek anda...",
+    "overlayLoadFailed": "Gagal memuatkan lapisan {{mode}}",
+    "placementMask": "Penempatan itu keluar daripada sempadan bumbung yang dikesan.",
+    "placementOverlap": "Penempatan itu bertindih dengan panel lain.",
+    "placementBounds": "Penempatan itu keluar daripada sempadan imej bumbung."
   }
 }
