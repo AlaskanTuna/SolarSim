@@ -30,7 +30,7 @@ Follow this as an ordered checklist, not a reference manual. Each major step end
 ### 1.1 Local toolchain (Node, pnpm, git, openssl, dig)
 
 [!IMPORTANT]
-SolarSim expects Node 24.x and pnpm 10.33.0. Use `corepack` for pnpm so the repo version and your local version stay aligned.
+SolarSim expects Node 24.x and pnpm 10.33.3. Use `corepack` for pnpm so the repo version and your local version stay aligned.
 
 ```bash
 node -v
@@ -43,7 +43,7 @@ corepack enable
 
 Install the base toolchain if any command is missing. The repo is developed against the current Node LTS line, so do not use an older runtime.
 
-✅ Validation: `node -v` reports `v24.x`, `pnpm -v` reports `10.33.0`, and `corepack enable` finishes without error.
+✅ Validation: `node -v` reports `v24.x`, `pnpm -v` reports `10.33.3`, and `corepack enable` finishes without error.
 
 ### 1.2 Cloud platform CLIs (gcloud, gh, heroku, vercel) - install + login
 
@@ -501,6 +501,8 @@ Two committed files define the fallback deployment:
 - `render.yaml` — a Render Blueprint describing one free web service that runs the Express backend and serves the pre-built SPA, exactly like the Heroku web dyno. It pins the build command, start command, and health check path; every secret is declared as `sync: false` so Render prompts for its value at first sync instead of reading it from a committed file.
 - `.node-version` — pins the runtime to the same Node version as `engines.node` in `package.json`. Render reads it; so does any other tooling that honors Node pin files.
 
+The blueprint sets `runtime: node` explicitly, and that line is load-bearing: the repo also ships a root `Dockerfile` (section 2.1), which Render would otherwise auto-detect and build instead of the Node buildpack.
+
 The pin matters because Render otherwise builds with whatever Node runtime it currently defaults to, and this repo is developed against Node 24.x with pnpm provisioned by corepack from the `packageManager` field.
 
 ### 13.2 Migrations Without a Pre-Deploy Command
@@ -621,4 +623,4 @@ Rollback while the Heroku app still exists: point Porkbun DNS back at the Heroku
 | `dig`     | Queries DNS records from the terminal                   |
 | `openssl` | Generates secure random secrets and checks TLS          |
 
-Last verified: 03/05/26 (against main @ <replace-with-current-sha>)
+Last verified: 25/08/26 (against main @ 138da56)
