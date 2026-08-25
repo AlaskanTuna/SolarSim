@@ -38,6 +38,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # pdf-service sits outside the pnpm workspace with its own npm lockfile;
+      # without this its TypeScript never compiles in CI.
+      - name: Install pdf-service dependencies
+        run: npm ci
+        working-directory: services/pdf-service
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
       - name: Build workspaces
         run: pnpm build
 
