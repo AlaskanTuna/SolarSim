@@ -287,19 +287,20 @@ Visit `http://localhost:5173` → sign up → click the confirmation email → y
 
 ### Useful Commands
 
-| Command                  | Description                                                       |
-| ------------------------ | ----------------------------------------------------------------- |
-| `pnpm dev`               | Start frontend + backend concurrently                             |
-| `pnpm dev:backend`       | Start backend only                                                |
-| `pnpm dev:frontend`      | Start frontend only                                               |
-| `pnpm build`             | Build all workspaces for production                               |
-| `pnpm test`              | Run frontend + backend unit tests                                 |
-| `pnpm typecheck`         | Strict TS check across every package                              |
-| `pnpm format`            | Run Prettier across the repo                                      |
-| `pnpm prisma:generate`   | Regenerate the Prisma client (after `schema.prisma` edits)        |
-| `pnpm db:migrate`        | Apply migrations interactively (local dev)                        |
-| `pnpm db:migrate:deploy` | Apply migrations non-interactively (Heroku release, CI, recovery) |
-| `pnpm db:seed`           | Seed tariff config data                                           |
+| Command                  | Description                                                         |
+| ------------------------ | ------------------------------------------------------------------- |
+| `pnpm dev`               | Start frontend + backend concurrently                               |
+| `pnpm dev:backend`       | Start backend only                                                  |
+| `pnpm dev:frontend`      | Start frontend only                                                 |
+| `pnpm build`             | Build all workspaces for production                                 |
+| `pnpm test`              | Run frontend + backend unit tests                                   |
+| `pnpm typecheck`         | Strict TS check across every package                                |
+| `pnpm format`            | Run Prettier across the repo                                        |
+| `pnpm prisma:generate`   | Regenerate the Prisma client (after `schema.prisma` edits)          |
+| `pnpm db:migrate`        | Apply migrations interactively (local dev)                          |
+| `pnpm db:migrate:deploy` | Apply migrations non-interactively (Heroku release, CI, recovery)   |
+| `pnpm db:seed`           | Seed tariff config data                                             |
+| `docker compose up -d`   | Run the backend + a local Postgres in containers (see RUNBOOK §2.1) |
 
 ---
 
