@@ -44,6 +44,12 @@ jobs:
         run: npm ci
         working-directory: services/pdf-service
 
+      # Must precede typecheck: @prisma/client exports nothing until it is generated,
+      # so on a clean checkout `tsc` fails with TS2305 on PrismaClient/Prisma/enums.
+      # `pnpm build` generates it, but typecheck deliberately runs before build.
+      - name: Generate Prisma client
+        run: pnpm prisma:generate
+
       - name: Lint
         run: pnpm lint
 
