@@ -40,26 +40,6 @@ _Search a roof. Tweak the layout. Get a NEM-accurate savings report. As easy as 
 
 ---
 
-> Built by **[@AlaskanTuna](https://github.com/AlaskanTuna)**.
-
-> [!NOTE]
-> SolarSim is an **assessment** tool. It produces an estimate report, not a quotation, not a contract, and not an installation order. Final pricing and feasibility always come from a licensed Malaysian installer.
-
-> [!NOTE]
-> **[solarsim.tech](https://solarsim.tech) is live again.** The migration off Supabase is complete — Postgres on Neon, object storage on Cloudflare R2, self-hosted Better Auth, and transactional email over the Resend API. The [v1.1 — Back Online](https://github.com/AlaskanTuna/SolarSim/milestone/1) milestone tracked that work and is closed.
-
-<a id="walkthrough"></a>
-
-## Walkthrough
-
-https://github.com/AlaskanTuna/SolarSim/releases/download/v1.1-walkthrough/solarsim-walkthrough.mp4
-
-The three-page flow: **Map** (search a roof, one Solar API call, cached forever) → **Workbench** (drag, rotate, and delete panels on a Konva canvas, with flux resampled locally) → **Analysis** (NEM Rakyat 3.0 billing simulation and PDF export).
-
-<div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
-
----
-
 <a id="at-a-glance"></a>
 
 ## ✨ At a Glance
@@ -383,13 +363,14 @@ The production stack is **two services**: a Heroku web dyno (frontend bundle + E
 > [!CAUTION]
 > All figures in SolarSim are **estimates** based on satellite-derived flux data. Real-world generation and savings can differ by 10 to 15 percent or more depending on shading, soiling, inverter behaviour, and weather variance not captured in the input data.
 
-| Disclaimer                | What It Means                                                                                                                                                                                              |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🧾 **Tariff Provenance**  | Every kWh figure traces back to gazetted Suruhanjaya Tenaga and TNB schedules. RP4 brackets, EEI bands, AFA, SST and the RE Fund are seeded as typed config, not narrated by an LLM.                       |
-| 🛰 **Imagery Scope**      | Rooftop imagery and flux rasters come exclusively from the Google Solar API and stay scoped to the user's project. SolarSim does not scrape, syndicate or republish any third-party data.                  |
-| ⚖ **Layout Boundary**     | The Workbench plans where panels could go, not whether they should. Purlin spacing, MCB sizing, inverter placement and roof-load calculations are out of scope and remain the installer's responsibility.  |
-| 🔑 **Data Ownership**     | Every API request is authorized against the Better Auth session, and Prisma queries are scoped to that user. Account deletion cascades and removes the user's projects, cached imagery and saved analyses. |
-| 🛡 **PDF Token Security** | PDF exports use signed tokens that expire in 60 seconds and are scoped to a single project, so leaked URLs cannot be replayed by anyone else.                                                              |
+| Disclaimer                    | What It Means                                                                                                                                                                                              |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ⚠ **Assessment, Not a Quote** | SolarSim produces an estimate report — not a quotation, not a contract and not an installation order. Final pricing and feasibility always come from a licensed Malaysian installer.                       |
+| 🧾 **Tariff Provenance**      | Every kWh figure traces back to gazetted Suruhanjaya Tenaga and TNB schedules. RP4 brackets, EEI bands, AFA, SST and the RE Fund are seeded as typed config, not narrated by an LLM.                       |
+| 🛰 **Imagery Scope**          | Rooftop imagery and flux rasters come exclusively from the Google Solar API and stay scoped to the user's project. SolarSim does not scrape, syndicate or republish any third-party data.                  |
+| ⚖ **Layout Boundary**         | The Workbench plans where panels could go, not whether they should. Purlin spacing, MCB sizing, inverter placement and roof-load calculations are out of scope and remain the installer's responsibility.  |
+| 🔑 **Data Ownership**         | Every API request is authorized against the Better Auth session, and Prisma queries are scoped to that user. Account deletion cascades and removes the user's projects, cached imagery and saved analyses. |
+| 🛡 **PDF Token Security**     | PDF exports use signed tokens that expire in 60 seconds and are scoped to a single project, so leaked URLs cannot be replayed by anyone else.                                                              |
 
 <div align="right"><a href="#top">&#8593;&nbsp;Back to top</a></div>
 
