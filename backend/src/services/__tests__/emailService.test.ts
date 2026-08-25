@@ -76,7 +76,7 @@ describe('emailService', () => {
 
     await sendVerificationEmail(RECIPIENT, url)
 
-    expect(renderVerificationEmailMock).toHaveBeenCalledWith(url)
+    expect(renderVerificationEmailMock).toHaveBeenCalledWith(url, undefined)
     expect(emailsSendMock).toHaveBeenCalledWith({
       from: EMAIL_FROM,
       to: RECIPIENT,
@@ -90,7 +90,7 @@ describe('emailService', () => {
 
     await sendPasswordResetEmail(RECIPIENT, url)
 
-    expect(renderPasswordResetEmailMock).toHaveBeenCalledWith(url)
+    expect(renderPasswordResetEmailMock).toHaveBeenCalledWith(url, undefined)
     expect(emailsSendMock).toHaveBeenCalledWith({
       from: EMAIL_FROM,
       to: RECIPIENT,
@@ -104,7 +104,7 @@ describe('emailService', () => {
 
     await sendEmailChangeEmail(RECIPIENT, url)
 
-    expect(renderEmailChangeEmailMock).toHaveBeenCalledWith(url)
+    expect(renderEmailChangeEmailMock).toHaveBeenCalledWith(url, undefined)
     expect(emailsSendMock).toHaveBeenCalledWith({
       from: EMAIL_FROM,
       to: RECIPIENT,
@@ -118,7 +118,7 @@ describe('emailService', () => {
 
     await sendInviteEmail(RECIPIENT, url)
 
-    expect(renderInviteEmailMock).toHaveBeenCalledWith(url)
+    expect(renderInviteEmailMock).toHaveBeenCalledWith(url, undefined)
     expect(emailsSendMock).toHaveBeenCalledWith({
       from: EMAIL_FROM,
       to: RECIPIENT,

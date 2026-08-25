@@ -11,7 +11,8 @@ import {
   renderEmailChangeEmail,
   renderInviteEmail,
   renderPasswordResetEmail,
-  renderVerificationEmail
+  renderVerificationEmail,
+  type SupportedEmailLocale
 } from '../emails/index.js'
 
 /** Maximum number of transactional emails accepted in one rolling hour. */
@@ -57,9 +58,10 @@ export async function sendEmail({ to, subject, html }: { to: string; subject: st
  *
  * @param email - Recipient address
  * @param url - Better Auth verification link
+ * @param locale - Recipient locale; renders English when omitted
  */
-export async function sendVerificationEmail(email: string, url: string): Promise<void> {
-  const { subject, html } = renderVerificationEmail(url)
+export async function sendVerificationEmail(email: string, url: string, locale?: SupportedEmailLocale): Promise<void> {
+  const { subject, html } = renderVerificationEmail(url, locale)
   await sendEmail({ to: email, subject, html })
 }
 
@@ -68,9 +70,10 @@ export async function sendVerificationEmail(email: string, url: string): Promise
  *
  * @param email - Recipient address
  * @param url - Better Auth password-reset link
+ * @param locale - Recipient locale; renders English when omitted
  */
-export async function sendPasswordResetEmail(email: string, url: string): Promise<void> {
-  const { subject, html } = renderPasswordResetEmail(url)
+export async function sendPasswordResetEmail(email: string, url: string, locale?: SupportedEmailLocale): Promise<void> {
+  const { subject, html } = renderPasswordResetEmail(url, locale)
   await sendEmail({ to: email, subject, html })
 }
 
@@ -79,9 +82,10 @@ export async function sendPasswordResetEmail(email: string, url: string): Promis
  *
  * @param email - Recipient address
  * @param url - Email-change confirmation link
+ * @param locale - Recipient locale; renders English when omitted
  */
-export async function sendEmailChangeEmail(email: string, url: string): Promise<void> {
-  const { subject, html } = renderEmailChangeEmail(url)
+export async function sendEmailChangeEmail(email: string, url: string, locale?: SupportedEmailLocale): Promise<void> {
+  const { subject, html } = renderEmailChangeEmail(url, locale)
   await sendEmail({ to: email, subject, html })
 }
 
@@ -90,8 +94,9 @@ export async function sendEmailChangeEmail(email: string, url: string): Promise<
  *
  * @param email - Recipient address
  * @param url - Invitation link
+ * @param locale - Recipient locale; renders English when omitted
  */
-export async function sendInviteEmail(email: string, url: string): Promise<void> {
-  const { subject, html } = renderInviteEmail(url)
+export async function sendInviteEmail(email: string, url: string, locale?: SupportedEmailLocale): Promise<void> {
+  const { subject, html } = renderInviteEmail(url, locale)
   await sendEmail({ to: email, subject, html })
 }

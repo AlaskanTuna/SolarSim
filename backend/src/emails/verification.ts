@@ -1,5 +1,6 @@
 import { env } from '../config/env.js'
-import type { RenderedEmail } from './types.js'
+import { emailCopy } from './copy.js'
+import type { RenderedEmail, SupportedEmailLocale } from './types.js'
 
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"']/g, (character) => {
@@ -19,18 +20,19 @@ const escapeHtml = (value: string) =>
     }
   })
 
-export const renderVerificationEmail = (url: string): RenderedEmail => {
+export const renderVerificationEmail = (url: string, locale: SupportedEmailLocale = 'en'): RenderedEmail => {
   const escapedUrl = escapeHtml(url)
   const logoUrl = `${env.EMAIL_ASSET_BASE_URL}/email-logo.png`
+  const copy = emailCopy[locale].verification
 
   return {
-    subject: 'Confirm your SolarSim account',
+    subject: copy.subject,
     html: `<!doctype html>
-<html>
+<html lang="${copy.lang}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Confirm Your SolarSim Account</title>
+    <title>${copy.heading}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -63,7 +65,7 @@ export const renderVerificationEmail = (url: string): RenderedEmail => {
     </style>
   </head>
   <body>
-    <div class="preheader">Confirm your email address to finish setting up your SolarSim account.</div>
+    <div class="preheader">${copy.preheader}</div>
     <div class="wrapper">
       <div class="card">
         <div class="header">
@@ -73,15 +75,15 @@ export const renderVerificationEmail = (url: string): RenderedEmail => {
             <span class="brand-cell brand-name">SolarSim</span>
           </div>
         </div>
-        <div class="hero"><p class="eyebrow">Account confirmation</p><h1>Confirm Your SolarSim Account</h1></div>
+        <div class="hero"><p class="eyebrow">${copy.eyebrow}</p><h1>${copy.heading}</h1></div>
         <div class="body">
-          <p class="lead">Welcome to SolarSim. Please confirm your email address to finish setting up your account.</p>
-          <div class="cta"><a class="btn" href="${escapedUrl}">Confirm Account</a></div>
-          <div class="notice">If you did not create a SolarSim account, you can safely ignore this email.</div>
-          <p class="fallback">If the button does not work, copy and paste this link into your browser:<br /><a href="${escapedUrl}">${escapedUrl}</a></p>
+          <p class="lead">${copy.lead}</p>
+          <div class="cta"><a class="btn" href="${escapedUrl}">${copy.button}</a></div>
+          <div class="notice">${copy.notice}</div>
+          <p class="fallback">${copy.fallbackIntro}<br /><a href="${escapedUrl}">${escapedUrl}</a></p>
         </div>
       </div>
-      <div class="footer">You received this email because you signed up for SolarSim.</div>
+      <div class="footer">${copy.footer}</div>
     </div>
   </body>
 </html>`

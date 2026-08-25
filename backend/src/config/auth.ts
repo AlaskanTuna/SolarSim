@@ -11,6 +11,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { env } from './env.js'
 import { prisma } from './prisma.js'
 import { sendVerificationEmail, sendPasswordResetEmail } from '../services/emailService.js'
+import { resolveEmailLocale } from '../emails/index.js'
 
 export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
@@ -25,7 +26,7 @@ export const auth = betterAuth({
     requireEmailVerification: true,
     autoSignIn: false,
     sendResetPassword: async ({ user, url }) => {
-      await sendPasswordResetEmail(user.email, url)
+      await sendPasswordResetEmail(user.email, url, resolveEmailLocale('locale' in user ? user.locale : undefined))
     }
   },
 
@@ -33,7 +34,7 @@ export const auth = betterAuth({
     sendOnSignUp: true,
     sendOnSignIn: true,
     sendVerificationEmail: async ({ user, url }) => {
-      await sendVerificationEmail(user.email, url)
+      await sendVerificationEmail(user.email, url, resolveEmailLocale('locale' in user ? user.locale : undefined))
     }
   },
 

@@ -1,5 +1,6 @@
 import { env } from '../config/env.js'
-import type { RenderedEmail } from './types.js'
+import { emailCopy } from './copy.js'
+import type { RenderedEmail, SupportedEmailLocale } from './types.js'
 
 const escapeHtml = (value: string) =>
   value.replace(/[&<>"']/g, (character) => {
@@ -19,18 +20,19 @@ const escapeHtml = (value: string) =>
     }
   })
 
-export const renderEmailChangeEmail = (url: string): RenderedEmail => {
+export const renderEmailChangeEmail = (url: string, locale: SupportedEmailLocale = 'en'): RenderedEmail => {
   const escapedUrl = escapeHtml(url)
   const logoUrl = `${env.EMAIL_ASSET_BASE_URL}/email-logo.png`
+  const copy = emailCopy[locale].emailChange
 
   return {
-    subject: 'Confirm your new email address',
+    subject: copy.subject,
     html: `<!doctype html>
-<html>
+<html lang="${copy.lang}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Confirm email change</title>
+    <title>${copy.heading}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -40,8 +42,8 @@ export const renderEmailChangeEmail = (url: string): RenderedEmail => {
     </style>
   </head>
   <body>
-    <div class="preheader">Confirm your new SolarSim email address.</div>
-    <div class="wrapper"><div class="card"><div class="header"><div class="brand"><span class="brand-cell"><span class="brand-mark"><img src="${logoUrl}" width="42" height="42" alt="" style="display:block;border:0;" /></span></span><span class="brand-cell brand-gap"></span><span class="brand-cell brand-name">SolarSim</span></div></div><div class="hero"><p class="eyebrow">Email change</p><h1>Confirm your new email address</h1></div><div class="body"><p class="lead">Please confirm your new email address by clicking the button below.</p><div class="cta"><a class="btn" href="${escapedUrl}">Confirm Email Change</a></div><div class="notice">If you did not request this change, please contact support immediately.</div><p class="fallback">If the button does not work, copy and paste this link into your browser:<br /><a href="${escapedUrl}">${escapedUrl}</a></p></div></div><div class="footer">You received this email because an email address change was requested for your SolarSim account.</div></div>
+    <div class="preheader">${copy.preheader}</div>
+    <div class="wrapper"><div class="card"><div class="header"><div class="brand"><span class="brand-cell"><span class="brand-mark"><img src="${logoUrl}" width="42" height="42" alt="" style="display:block;border:0;" /></span></span><span class="brand-cell brand-gap"></span><span class="brand-cell brand-name">SolarSim</span></div></div><div class="hero"><p class="eyebrow">${copy.eyebrow}</p><h1>${copy.heading}</h1></div><div class="body"><p class="lead">${copy.lead}</p><div class="cta"><a class="btn" href="${escapedUrl}">${copy.button}</a></div><div class="notice">${copy.notice}</div><p class="fallback">${copy.fallbackIntro}<br /><a href="${escapedUrl}">${escapedUrl}</a></p></div></div><div class="footer">${copy.footer}</div></div>
   </body>
 </html>`
   }
