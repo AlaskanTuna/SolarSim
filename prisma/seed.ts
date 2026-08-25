@@ -3,11 +3,15 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv'
 import { tariffDefaults } from '../shared/tariffDefaults.ts'
+import { seedDemoLocations } from './seedDemoLocations.ts'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 dotenv.config({ path: path.resolve(__dirname, '../.env') })
 
 const prisma = new PrismaClient()
+
+/** Total demo locations, for the seeding summary line. */
+const DEMO_LOCATION_COUNT = 4
 
 async function main() {
   // Upsert RP4 tariff config — idempotent
@@ -41,6 +45,16 @@ async function main() {
   })
 
   console.log('Seeded RP4 tariff config')
+
+  // Demo locations are seeded best-effort after the tariff config: they skip
+  // with a log line when R2 objects or rescued rows are missing, and their
+  // failure must never take the (required) tariff seed down with them.
+  try {
+    const ready = await seedDemoLocations()
+    console.log(`Demo locations ready: ${ready}/${DEMO_LOCATION_COUNT}`)
+  } catch (error) {
+    console.warn(`[Seed] Demo location seeding skipped after an unexpected error:`, error)
+  }
 }
 
 // Malaysian RP4 tariff rates (sen/kWh unless noted)
