@@ -14,6 +14,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import i18n, { DEFAULT_LOCALE, isSupportedLocale, LOCALE_STORAGE_KEY, type SupportedLocale } from '@/lib/i18n'
 import { useAuth } from '@/hooks/useAuth'
 import { authClient } from '@/lib/auth-client'
+import { setFormatterLocale } from '@/lib/formatters'
 
 /** Value exposed by `useLocale`. */
 type LocaleContextValue = {
@@ -87,6 +88,12 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     },
     [user]
   )
+
+  // Keeps the shared Intl formatters in step with the active locale; without this
+  // currency and number grouping stay pinned to en-MY regardless of the UI language.
+  useEffect(() => {
+    setFormatterLocale(locale)
+  }, [locale])
 
   return <LocaleContext.Provider value={{ locale, setLocale }}>{children}</LocaleContext.Provider>
 }
