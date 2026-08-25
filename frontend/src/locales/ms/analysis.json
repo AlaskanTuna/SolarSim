@@ -303,6 +303,22 @@
       "creditBalance": "Baki Kredit",
       "creditForfeited": "Kredit Dilucutkan",
       "youSave": "Anda jimat {{amount}} bulan ini"
+    },
+    "tooltips": {
+      "energy": "Caj elektrik asas, dikira daripada penggunaan kWh anda pada kadar berperingkat TNB.",
+      "capacity": "Caj tetap berdasarkan kapasiti sambungan anda, dikenakan untuk penggunaan melebihi 600 kWh.",
+      "network": "Menampung kos penyelenggaraan grid elektrik yang menyalurkan kuasa ke rumah anda.",
+      "retail": "Surcaj tambahan yang dikenakan untuk penggunaan melebihi 600 kWh.",
+      "afa": "Pelarasan Bahan Api Automatik: surcaj (atau rebat) yang ditetapkan kerajaan mengikut perubahan kos bahan api.",
+      "eeiRebate": "Insentif Kecekapan Tenaga: rebat yang memberi ganjaran kepada penggunaan elektrik yang lebih rendah.",
+      "reFund": "Dana Tenaga Boleh Baharu: levi 1.6% yang membiayai pembangunan tenaga boleh baharu Malaysia.",
+      "sst": "Cukai Jualan dan Perkhidmatan (8%), dikenakan hanya apabila penggunaan bulanan melebihi 600 kWh."
+    },
+    "nemTooltips": {
+      "billableKwh": "Penggunaan anda tolak penjanaan solar. Inilah jumlah yang sebenarnya dicaj oleh TNB.",
+      "creditUsed": "Kredit solar berlebihan daripada bulan sebelumnya yang digunakan untuk mengurangkan bil bulan ini.",
+      "creditBalance": "Kredit solar yang belum digunakan dan dibawa ke hadapan untuk mengimbangi bil bulan akan datang.",
+      "creditForfeited": "Kredit yang luput pada hujung tahun (Disember). Kredit NEM tidak boleh dibawa ke tahun berikutnya."
     }
   },
   "monthTable": {

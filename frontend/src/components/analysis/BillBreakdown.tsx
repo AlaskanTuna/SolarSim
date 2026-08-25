@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { InfoTooltip } from '@/components/ui/InfoTooltip'
 import { MONTH_LABELS } from '@/lib/analysis'
-import { formatCurrency, formatNumber, BILL_TOOLTIPS, NEM_TOOLTIPS } from './formatters'
+import { formatCurrency, formatNumber } from './formatters'
 import type { runAnnualSimulation } from '@/lib/billingEngine'
 
 type SimulationMonth = ReturnType<typeof runAnnualSimulation>['months'][number]
@@ -93,49 +93,49 @@ export function BillBreakdown({
           <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
             <div>
               <p className="text-muted-foreground">
-                {t('billBreakdown.fields.energy')} <InfoTooltip text={BILL_TOOLTIPS.energy} />
+                {t('billBreakdown.fields.energy')} <InfoTooltip text={t('billBreakdown.tooltips.energy')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.baselineBill.energy)}</p>
             </div>
             <div>
               <p className="text-muted-foreground">
-                {t('billBreakdown.fields.capacity')} <InfoTooltip text={BILL_TOOLTIPS.capacity} />
+                {t('billBreakdown.fields.capacity')} <InfoTooltip text={t('billBreakdown.tooltips.capacity')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.baselineBill.capacity)}</p>
             </div>
             <div>
               <p className="text-muted-foreground">
-                {t('billBreakdown.fields.network')} <InfoTooltip text={BILL_TOOLTIPS.network} />
+                {t('billBreakdown.fields.network')} <InfoTooltip text={t('billBreakdown.tooltips.network')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.baselineBill.network)}</p>
             </div>
             <div>
               <p className="text-muted-foreground">
-                {t('billBreakdown.fields.retail')} <InfoTooltip text={BILL_TOOLTIPS.retail} />
+                {t('billBreakdown.fields.retail')} <InfoTooltip text={t('billBreakdown.tooltips.retail')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.baselineBill.retail)}</p>
             </div>
             <div>
               <p className="text-muted-foreground">
-                {t('billBreakdown.fields.afa')} <InfoTooltip text={BILL_TOOLTIPS.afa} />
+                {t('billBreakdown.fields.afa')} <InfoTooltip text={t('billBreakdown.tooltips.afa')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.baselineBill.afa)}</p>
             </div>
             <div>
               <p className="text-muted-foreground">
-                {t('billBreakdown.fields.eeiRebate')} <InfoTooltip text={BILL_TOOLTIPS.eeiRebate} />
+                {t('billBreakdown.fields.eeiRebate')} <InfoTooltip text={t('billBreakdown.tooltips.eeiRebate')} />
               </p>
               <p className="font-semibold">-{formatCurrency(selectedMonth.baselineBill.eeiRebate)}</p>
             </div>
             <div>
               <p className="text-muted-foreground">
-                {t('billBreakdown.fields.reFund')} <InfoTooltip text={BILL_TOOLTIPS.reFund} />
+                {t('billBreakdown.fields.reFund')} <InfoTooltip text={t('billBreakdown.tooltips.reFund')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.baselineBill.reFund)}</p>
             </div>
             <div>
               <p className="text-muted-foreground">
-                {t('billBreakdown.fields.sst')} <InfoTooltip text={BILL_TOOLTIPS.sst} />
+                {t('billBreakdown.fields.sst')} <InfoTooltip text={t('billBreakdown.tooltips.sst')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.baselineBill.sst)}</p>
             </div>
@@ -159,73 +159,76 @@ export function BillBreakdown({
           <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
             <div>
               <p className="text-emerald-900/70 dark:text-emerald-100/70">
-                {t('billBreakdown.fields.billableKwh')} <InfoTooltip text={NEM_TOOLTIPS.billableKwh} />
+                {t('billBreakdown.fields.billableKwh')}{' '}
+                <InfoTooltip text={t('billBreakdown.nemTooltips.billableKwh')} />
               </p>
               <p className="font-semibold">{formatNumber(selectedMonth.billableKwh, 'kWh')}</p>
             </div>
             <div>
               <p className="text-emerald-900/70 dark:text-emerald-100/70">
-                {t('billBreakdown.fields.creditUsed')} <InfoTooltip text={NEM_TOOLTIPS.creditUsed} />
+                {t('billBreakdown.fields.creditUsed')} <InfoTooltip text={t('billBreakdown.nemTooltips.creditUsed')} />
               </p>
               <p className="font-semibold">{formatNumber(selectedMonth.creditUsed, 'kWh')}</p>
             </div>
             <div>
               <p className="text-emerald-900/70 dark:text-emerald-100/70">
-                {t('billBreakdown.fields.creditBalance')} <InfoTooltip text={NEM_TOOLTIPS.creditBalance} />
+                {t('billBreakdown.fields.creditBalance')}{' '}
+                <InfoTooltip text={t('billBreakdown.nemTooltips.creditBalance')} />
               </p>
               <p className="font-semibold">{formatNumber(selectedMonth.creditBalance, 'kWh')}</p>
             </div>
             <div>
               <p className="text-emerald-900/70 dark:text-emerald-100/70">
-                {t('billBreakdown.fields.creditForfeited')} <InfoTooltip text={NEM_TOOLTIPS.creditForfeited} />
+                {t('billBreakdown.fields.creditForfeited')}{' '}
+                <InfoTooltip text={t('billBreakdown.nemTooltips.creditForfeited')} />
               </p>
               <p className="font-semibold">{formatNumber(selectedMonth.creditForfeited, 'kWh')}</p>
             </div>
             <div>
               <p className="text-emerald-900/70 dark:text-emerald-100/70">
-                {t('billBreakdown.fields.energy')} <InfoTooltip text={BILL_TOOLTIPS.energy} />
+                {t('billBreakdown.fields.energy')} <InfoTooltip text={t('billBreakdown.tooltips.energy')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.nemBill.energy)}</p>
             </div>
             <div>
               <p className="text-emerald-900/70 dark:text-emerald-100/70">
-                {t('billBreakdown.fields.retail')} <InfoTooltip text={BILL_TOOLTIPS.retail} />
+                {t('billBreakdown.fields.retail')} <InfoTooltip text={t('billBreakdown.tooltips.retail')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.nemBill.retail)}</p>
             </div>
             <div>
               <p className="text-emerald-900/70 dark:text-emerald-100/70">
-                {t('billBreakdown.fields.capacity')} <InfoTooltip text={BILL_TOOLTIPS.capacity} />
+                {t('billBreakdown.fields.capacity')} <InfoTooltip text={t('billBreakdown.tooltips.capacity')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.nemBill.capacity)}</p>
             </div>
             <div>
               <p className="text-emerald-900/70 dark:text-emerald-100/70">
-                {t('billBreakdown.fields.afa')} <InfoTooltip text={BILL_TOOLTIPS.afa} />
+                {t('billBreakdown.fields.afa')} <InfoTooltip text={t('billBreakdown.tooltips.afa')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.nemBill.afa)}</p>
             </div>
             <div>
               <p className="text-emerald-900/70 dark:text-emerald-100/70">
-                {t('billBreakdown.fields.network')} <InfoTooltip text={BILL_TOOLTIPS.network} />
+                {t('billBreakdown.fields.network')} <InfoTooltip text={t('billBreakdown.tooltips.network')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.nemBill.network)}</p>
             </div>
             <div>
               <p className="text-emerald-900/70 dark:text-emerald-100/70">
-                {t('billBreakdown.fields.eeiRebate')} <InfoTooltip text={BILL_TOOLTIPS.eeiRebate} />
+                {t('billBreakdown.fields.eeiRebate')} <InfoTooltip text={t('billBreakdown.tooltips.eeiRebate')} />
               </p>
               <p className="font-semibold">-{formatCurrency(selectedMonth.nemBill.eeiRebate)}</p>
             </div>
             <div>
               <p className="text-emerald-900/70 dark:text-emerald-100/70">
-                {t('billBreakdown.fields.reFund')} <InfoTooltip text={BILL_TOOLTIPS.reFund} />
+                {t('billBreakdown.fields.reFund')} <InfoTooltip text={t('billBreakdown.tooltips.reFund')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.nemBill.reFund)}</p>
             </div>
             <div>
               <p className="text-emerald-900/70 dark:text-emerald-100/70">
-                {t('billBreakdown.fields.sst')} <InfoTooltip text={BILL_TOOLTIPS.sst} />
+                {t('billBreakdown.fields.sst')} <InfoTooltip text={t('billBreakdown.tooltips.sst')} />
               </p>
               <p className="font-semibold">{formatCurrency(selectedMonth.nemBill.sst)}</p>
             </div>
