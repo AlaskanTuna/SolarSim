@@ -24,7 +24,7 @@ export const renderPasswordResetEmail = (url: string): RenderedEmail => {
   const logoUrl = `${env.EMAIL_ASSET_BASE_URL}/email-logo.png`
 
   return {
-    subject: 'Reset your Solar Layout Generator password',
+    subject: 'Reset your SolarSim password',
     html: `<!doctype html>
 <html>
   <head>

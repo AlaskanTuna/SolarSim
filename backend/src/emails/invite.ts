@@ -24,7 +24,7 @@ export const renderInviteEmail = (url: string): RenderedEmail => {
   const logoUrl = `${env.EMAIL_ASSET_BASE_URL}/email-logo.png`
 
   return {
-    subject: "You've been invited to Solar Layout Generator",
+    subject: "You've been invited to SolarSim",
     html: `<!doctype html>
 <html>
   <head>
@@ -41,7 +41,7 @@ export const renderInviteEmail = (url: string): RenderedEmail => {
   </head>
   <body>
     <div class="preheader">You have been invited to join SolarSim.</div>
-    <div class="wrapper"><div class="card"><div class="header"><div class="brand"><span class="brand-cell"><span class="brand-mark"><img src="${logoUrl}" width="42" height="42" alt="" style="display:block;border:0;" /></span></span><span class="brand-cell brand-gap"></span><span class="brand-cell brand-name">SolarSim</span></div></div><div class="hero"><p class="eyebrow">Invitation</p><h1>You have been invited</h1></div><div class="body"><p class="lead">You have been invited to join Solar Layout Generator. Click the button below to accept the invitation and set up your account.</p><div class="cta"><a class="btn" href="${escapedUrl}">Accept Invitation</a></div><div class="notice">If you were not expecting this invitation, you can safely ignore this email.</div><p class="fallback">If the button does not work, copy and paste this link into your browser:<br /><a href="${escapedUrl}">${escapedUrl}</a></p></div></div><div class="footer">You received this email because you were invited to SolarSim.</div></div>
+    <div class="wrapper"><div class="card"><div class="header"><div class="brand"><span class="brand-cell"><span class="brand-mark"><img src="${logoUrl}" width="42" height="42" alt="" style="display:block;border:0;" /></span></span><span class="brand-cell brand-gap"></span><span class="brand-cell brand-name">SolarSim</span></div></div><div class="hero"><p class="eyebrow">Invitation</p><h1>You have been invited</h1></div><div class="body"><p class="lead">You have been invited to join SolarSim. Click the button below to accept the invitation and set up your account.</p><div class="cta"><a class="btn" href="${escapedUrl}">Accept Invitation</a></div><div class="notice">If you were not expecting this invitation, you can safely ignore this email.</div><p class="fallback">If the button does not work, copy and paste this link into your browser:<br /><a href="${escapedUrl}">${escapedUrl}</a></p></div></div><div class="footer">You received this email because you were invited to SolarSim.</div></div>
   </body>
 </html>`
   }
