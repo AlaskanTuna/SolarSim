@@ -12,6 +12,7 @@ import { resolveLocation, getLocationStatus, probeLocation } from '@/api/locatio
 import { LowerResolutionConsentModal } from '@/components/map/LowerResolutionConsentModal'
 import { CoverageNoticeModal, readCoverageNoticeDismissed } from '@/components/map/CoverageNoticeModal'
 import { ManualCoordinateModal } from '@/components/map/ManualCoordinateModal'
+import { DEMO_LOCATIONS } from '@/lib/demoLocations'
 import type { ImageryQuality } from '@shared/types'
 import { createProject, getProject } from '@/api/projects'
 import { ApiError } from '@/api/client'
@@ -450,6 +451,28 @@ export function MapPage() {
                     <Info className="h-3 w-3" />
                     {t('search.coverageInfoButton')}
                   </button>
+                </div>
+              )}
+
+              {/* Pre-resolved locations. Every one is already in the Location cache, so
+                  picking one skips the Solar API entirely — no GeoTIFF download, no sharp,
+                  no quota spend, and no cold-start timeout on a visitor's first click. */}
+              {!isReadonly && phase !== 'processing' && (
+                <div className="mt-3 text-center">
+                  <p className="text-xs font-medium text-muted-foreground">{t('demoLocations.title')}</p>
+                  <div className="mt-1.5 flex flex-wrap justify-center gap-1.5">
+                    {DEMO_LOCATIONS.map((demo) => (
+                      <button
+                        key={demo.id}
+                        type="button"
+                        onClick={() => handleSelectedPlace(demo.lat, demo.lng, t(`demoLocations.items.${demo.id}`))}
+                        className="rounded-lg border border-border bg-card/95 px-2.5 py-1 text-xs text-muted-foreground shadow-md backdrop-blur-sm transition-colors hover:text-foreground"
+                      >
+                        {t(`demoLocations.items.${demo.id}`)}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="mt-1 text-[11px] text-muted-foreground/80">{t('demoLocations.hint')}</p>
                 </div>
               )}
             </div>
