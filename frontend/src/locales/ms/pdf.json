@@ -152,7 +152,16 @@
   },
   "page8": {
     "sectionLabel": "Andaian & Penafian",
-    "title": "Andaian & Penafian"
+    "title": "Andaian & Penafian",
+    "disclaimers": {
+      "tnbTariff": "Anggaran adalah berdasarkan kadar tarif TNB yang diterbitkan di bawah Tempoh Kawal Selia 4 (RP4; berkuat kuasa 1 Julai 2025) dan peraturan NEM Rakyat 3.0 secara lalai. Bil sebenar mungkin berbeza disebabkan panjang kitaran bil, tarikh bacaan meter dan pelarasan tarif. Buat pelarasan anda sendiri dalam paparan \"Lanjutan\" jika perlu.",
+      "afaRate": "Kadar Pelarasan Bahan Api Automatik (AFA) berubah setiap bulan. Anggaran menggunakan kadar terkini yang diketahui dan mungkin tidak mencerminkan perubahan pada masa hadapan.",
+      "eeiRebate": "PETRA telah menyatakan bahawa kadar Insentif Kecekapan Tenaga (EEI) mungkin dilaraskan untuk pengguna NEM. Pengiraan semasa menggunakan kadar EEI standard sementara menunggu pindaan rasmi.",
+      "solarGeneration": "Anggaran penjanaan solar adalah berdasarkan data sinaran purata. Output sebenar berbeza mengikut cuaca, bayang, orientasi panel, kekotoran dan keadaan peralatan.",
+      "creditForfeiture": "Kredit berlebihan akan luput pada penghujung setiap tahun kalendar. Tiada bayaran tunai dibuat untuk kredit yang tidak digunakan.",
+      "systemCost": "Kos sistem dianggarkan secara bawah-ke-atas: harga panel pengedar + carian SKU penyongsang + pemasangan bergantung jenis bumbung + BOS elektrik + permit + tambahan buruh + margin pemasang. Ia mengandaikan harga pemasang peringkat pertengahan dan pemasangan rumah setingkat. Sebut harga siap-pakai di Malaysia lazimnya berada dalam ±10% daripada angka ini. Sentiasa sahkan dengan pemasang berlesen yang berdaftar dengan SEDA.",
+      "paybackProjections": "Unjuran tempoh bayaran balik dan penjimatan tidak mengambil kira penyelenggaraan tahunan (sekitar RM 500/tahun) atau penggantian penyongsang (lazimnya diperlukan pada tahun 10 hingga 15, berkos sekitar RM 3,000 hingga 6,000). Peningkatan tarif boleh dikonfigurasikan dalam paparan Lanjutan (lalai 0%). Semakan RP4 di Malaysia secara sejarahnya cenderung sekitar 3 hingga 5% setahun. Pulangan jangka panjang sebenar mungkin berbeza."
+    }
   },
   "analysisError": {
     "title": "Analisis tidak disimpan",
