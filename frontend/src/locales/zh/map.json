@@ -94,5 +94,15 @@
     "step2Body": "在此输入完整的家庭地址或邮编，地图将缩放至您的建筑物并显示其轮廓。",
     "step3Title": "确认您的建筑物",
     "step3Body": "选择地址后，您将看到您的建筑物高亮显示。点击「分析该位置」以获取卫星太阳能数据，通常需要 15–30 秒。"
+  },
+  "demoLocations": {
+    "title": "或试试现成示例",
+    "hint": "这些屋顶已完成分析，可立即打开。",
+    "items": {
+      "klangValleyHigh": "赛城，雪兰莪",
+      "klangValleyWest": "布城一带，雪兰莪",
+      "klangValleyEast": "沙登再也，雪兰莪",
+      "sungaiPetani": "双溪大年，吉打"
+    }
   }
 }

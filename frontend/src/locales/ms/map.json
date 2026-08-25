@@ -94,5 +94,15 @@
     "step2Body": "Taip alamat rumah penuh atau poskod anda di sini. Peta akan zum ke bangunan anda dan menunjukkan garisannya.",
     "step3Title": "Sahkan Bangunan Anda",
     "step3Body": "Selepas memilih alamat, anda akan melihat bangunan anda diserlahkan. Klik \"Analisis Lokasi Ini\" untuk mengambil data solar satelit. Ini biasanya mengambil masa 15–30 saat."
+  },
+  "demoLocations": {
+    "title": "Atau cuba contoh sedia ada",
+    "hint": "Bumbung ini telah pun dianalisis, jadi ia dibuka serta-merta.",
+    "items": {
+      "klangValleyHigh": "Cyberjaya, Selangor",
+      "klangValleyWest": "Kawasan Putrajaya, Selangor",
+      "klangValleyEast": "Seri Kembangan, Selangor",
+      "sungaiPetani": "Sungai Petani, Kedah"
+    }
   }
 }
