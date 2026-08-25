@@ -1,0 +1,27 @@
+node_modules
+**/node_modules
+**/dist
+**/coverage
+.git
+.github
+.env
+.env.*
+!.env.example
+docs
+assets
+services
+tests
+graphify-out
+.claude
+.agents
+.codex
+.impeccable
+.idea
+.vscode
+*.md
+!README.md
+# The chat knowledge bible is read from disk at runtime by
+# backend/src/services/chat/knowledge.ts, so it must survive the *.md rule.
+!backend/assets/knowledge.md
+Dockerfile
+docker-compose.yml
