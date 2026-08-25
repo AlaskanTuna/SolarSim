@@ -288,7 +288,10 @@ export function WorkbenchPage() {
             <CardDescription>{t('errorState.description')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-sm text-destructive">
+            {/* break-all: these messages embed presigned storage URLs, which are one
+                long unbroken token. Without it the card pushes the page wider than the
+                viewport — 842px inside a 768px tablet viewport, measured. */}
+            <p className="break-all text-sm text-destructive">
               {error instanceof Error ? error.message : t('errorState.unknownError')}
             </p>
             <Button asChild variant="outline" size="sm" className="w-full justify-center gap-2">
