@@ -311,7 +311,9 @@ export function TariffControls({
               {t('sidebar.systemAssumptions.label')}
               <InfoTooltip text={t('sidebar.systemAssumptions.tooltip')} />
             </Label>
-            <div className="grid grid-cols-3 gap-2">
+            {/* Stacks below sm: three number inputs with 11px labels land near ~90px
+                each at 360px inside the padded sidebar, which truncates the labels. */}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-2">
               <div>
                 <Label className="text-[11px] text-muted-foreground">{t('sidebar.systemAssumptions.pr')}</Label>
                 <Input
