@@ -21,8 +21,9 @@ Follow this as an ordered checklist, not a reference manual. Each major step end
 10. [Operational runbook](#10-operational-runbook)
 11. [Troubleshooting](#11-troubleshooting)
 12. [Tearing down](#12-tearing-down)
-13. [Appendix A: env var reference card](#appendix-a-env-var-reference-card)
-14. [Appendix B: Glossary of CLIs](#appendix-b-glossary-of-clis)
+13. [Render free-tier fallback](#13-render-free-tier-fallback)
+14. [Appendix A: env var reference card](#appendix-a-env-var-reference-card)
+15. [Appendix B: Glossary of CLIs](#appendix-b-glossary-of-clis)
 
 ## 1. Prerequisites
 
@@ -458,6 +459,99 @@ vercel rm <deployment-id>
 Delete the Neon project and R2 bucket from their provider dashboards after preserving any data you need. Then remove the `solarsim.tech` DNS records from Porkbun so the domain no longer points at dead infrastructure.
 
 ✅ Validation: the Heroku app no longer serves traffic, the GCP project is gone, the Vercel deployment is removed, and the domain no longer resolves to the old stack.
+
+## 13. Render Free-Tier Fallback
+
+[!IMPORTANT]
+This section is preparation for the cutover planned when the Heroku student credit actually runs out (~May 2027). Heroku remains the live deploy target until then — do **not** touch `solarsim.tech` DNS or the Heroku app while following this section. Render's free tier is materially weaker than Heroku Basic, in the ways called out below; treat it as a fallback, not an upgrade.
+
+Render's pricing and free limits change periodically (the free spin-down moved from 30 to 15 minutes in September 2025), so re-verify against https://render.com/pricing and https://render.com/docs/free at cutover time.
+
+### 13.1 Repo Additions: render.yaml and .node-version
+
+Two committed files define the fallback deployment:
+
+- `render.yaml` — a Render Blueprint describing one free web service that runs the Express backend and serves the pre-built SPA, exactly like the Heroku web dyno. It pins the build command, start command, and health check path; every secret is declared as `sync: false` so Render prompts for its value at first sync instead of reading it from a committed file.
+- `.node-version` — pins the runtime to the same Node version as `engines.node` in `package.json`. Render reads it; so does any other tooling that honors Node pin files.
+
+The pin matters because Render otherwise builds with whatever Node runtime it currently defaults to, and this repo is developed against Node 24.x with pnpm provisioned by corepack from the `packageManager` field.
+
+### 13.2 Migrations Without a Pre-Deploy Command
+
+Render's free tier has no equivalent of the `Procfile` release phase — there is no pre-deploy command, so there is no direct replacement for `release: pnpm db:migrate:deploy`. The two honest options:
+
+1. **Append the migration to the build command (chosen; committed in `render.yaml`).** The build command is `pnpm install --frozen-lockfile && pnpm build && pnpm db:migrate:deploy`. Render builds before the new instance goes live, so the old instance keeps serving traffic until the build (including the migration) succeeds. Trade-off: migrations run on **every** deploy, including one that later fails its health check and rolls back — after such a rollback the database schema is one migration ahead of the serving code. Keep migrations backwards-compatible (expand-and-contract) until the cutover is proven.
+2. **Migrate manually from a local shell before each deploy.** Point `DIRECT_URL` at Neon locally and run `pnpm db:migrate:deploy`. This preserves Heroku's migrate-then-deploy ordering exactly but adds a manual step that is easy to forget.
+
+Option 1 is committed because the fallback must survive unattended deploys. If a particular migration is risky, run option 2 first — the build-command step then becomes a no-op for that deploy.
+
+### 13.3 Deploying the Parallel Environment (No DNS Changes Yet)
+
+Heroku stays live throughout this phase. Stand the Render service up as a second, isolated environment:
+
+```bash
+# One-time: create a Render account (https://render.com), connect the GitHub repo,
+# then provision the blueprint from the repo root.
+render up   # Render CLI; or use "New > Blueprint" in the dashboard
+```
+
+Render creates the `solarsim` web service on a `*.onrender.com` subdomain and prompts for every `sync: false` env var. Set them to the same values as Heroku (Section 4 and Appendix A), with these Render-specific differences:
+
+| Variable                      | Value on Render (Before Cutover)                                       | Why                                                                                                           |
+| ----------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `DATABASE_URL` / `DIRECT_URL` | Same Neon endpoints, both ending `&connect_timeout=15&pool_timeout=20` | Render and Heroku share one database while the fallback is parallel — see §13.5 before turning on auto-deploy |
+| `BETTER_AUTH_URL`             | `https://<service>.onrender.com`                                       | Better Auth resolves OAuth callbacks against this origin                                                      |
+| `FRONTEND_URL`                | `https://<service>.onrender.com`                                       | CORS must match the origin the SPA is actually served from                                                    |
+| `EMAIL_ASSET_BASE_URL`        | Keep `https://solarsim.tech`                                           | Email images live on the canonical origin; the fallback serves them too                                       |
+| `APEX_DOMAIN`                 | Leave unset                                                            | Unset keeps the apex/www redirect middleware inactive so the `*.onrender.com` URL works                       |
+| `NODE_ENV`                    | `production` (already in `render.yaml`)                                | Render's Node runtime does not set it automatically                                                           |
+
+Add a second callback URI to the Google OAuth client: `https://<service>.onrender.com/api/auth/callback/google`.
+
+Then deploy:
+
+```bash
+render deploy   # or push to the branch the service tracks, once auto-deploy is on
+```
+
+✅ Validation: `curl https://<service>.onrender.com/api/health` returns `{"status":"ok"}` (allow up to a minute for cold start), the SPA loads, Google sign-in completes, and a cached project loads end-to-end.
+
+### 13.4 Known Limits on the Free Tier
+
+Re-verified against Render's docs on 25/08/26: 512 MB RAM / 0.1 CPU, 750 free instance-hours per workspace per month, spin-down after 15 minutes of inactivity with ~1 minute cold start, no persistent disk, and no free pre-deploy command.
+
+- **Cold start:** the first request after a spin-down takes ~30–60 s. The frontend's `PROCESSING_TIMEOUT_MS` is 120 s (MapPage), so the cold start alone does not time out a location resolve — but the resolve itself still has to finish within the remaining budget.
+- **0.1 CPU:** the new-location pipeline downloads multi-MB GeoTIFFs and runs `sharp` on them. Phase 11 already documents OOM risk at 512 MB with a _full_ Heroku CPU share, so on a tenth of a CPU expect dramatically slower resolution. Measure cold-start time, RSS at idle, RSS during a resolve, and one full pipeline run, then compare the pipeline wall-clock against `PROCESSING_TIMEOUT_MS`; if it exceeds the ceiling, raising that timeout becomes a prerequisite for cutover rather than a nice-to-have (Phase 11 §13).
+- **750 instance-hours:** a single always-on free service consumes 744 h/month, so the allowance barely fits one service; a second free service in the workspace tips it over and suspends both.
+- **No persistent disk:** fine for SolarSim — GeoTIFFs and imagery live in R2, not on instance storage.
+- **Build minutes:** free workspaces get a monthly build-minute allowance; the pnpm install + workspace build spends it on every deploy.
+
+Do **not** add a keep-alive pinger that hits a database-touching route: keeping Neon's compute awake 24/7 costs ~180 CU-hours against a 100 CU-hour free budget and will suspend the database. If a pinger is ever used to dodge cold starts, point it at `/api/health` only — it touches neither Postgres nor the Solar API.
+
+### 13.5 Shared-Database Caveat While Both Hosts Are Live
+
+While the fallback is parallel, Render and Heroku talk to the same Neon database. Keep exactly one host auto-deploying (Heroku, via GitHub Actions) until there is a cutover decision: if both ran the build-command migration concurrently, the two `prisma migrate deploy` invocations would race each other.
+
+### 13.6 Cutover (Only When Heroku Credit Runs Out)
+
+The DNS records that change at Porkbun during a cutover:
+
+| Record       | Current Value                 | Cutover Value                               |
+| ------------ | ----------------------------- | ------------------------------------------- |
+| ALIAS (apex) | `<apex-target>.herokudns.com` | the target Render shows for `solarsim.tech` |
+| CNAME        | `<www-target>.herokudns.com`  | Render's target for `solarsim.tech`         |
+
+(The exact Render targets appear in the service's custom-domain settings after you add `solarsim.tech` there — do not add the domain during the parallel phase.) Custom domains work on Render's free instance type and get automatically provisioned and renewed TLS certificates, so no paid plan is required for the apex.
+
+At cutover time, in order:
+
+1. Add `solarsim.tech` as a custom domain on the Render service, then set `APEX_DOMAIN=solarsim.tech`, `BETTER_AUTH_URL=https://solarsim.tech`, and `FRONTEND_URL=https://solarsim.tech` on Render and redeploy.
+2. Update the Google OAuth client: authorised origins and the callback URI for `https://solarsim.tech`.
+3. **Update `ALLOWED_FRONTEND_ORIGIN` on the Vercel pdf-service to the new origin.** PDF export silently 403s if this is skipped — this exact regression already shipped once, on 26/04/26.
+4. Point Porkbun DNS at the Render targets; leave the Heroku app deployed.
+5. Run the Section 9 smoke tests against `https://solarsim.tech`.
+
+Rollback while the Heroku app still exists: point Porkbun DNS back at the Heroku targets, then set `APEX_DOMAIN`, `BETTER_AUTH_URL`, and `FRONTEND_URL` back to their Heroku values. TLS is automatic on both platforms (`heroku certs:auto` on Heroku, managed certificates on Render), so no certificate work is needed in either direction.
 
 ## Appendix A: env var reference card
 

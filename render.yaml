@@ -1,0 +1,71 @@
+# SolarSim — Render blueprint (issue #9 fallback; Heroku stays live until ~May 2027).
+#
+# One free web service running the Express backend that also serves the built SPA
+# (backend/src/app.ts does express.static on frontend/dist with an SPA fallback) —
+# the same shape as the Heroku web dyno. `runtime: node` is explicit and load-bearing:
+# the repo also ships a Dockerfile (issue #18) which Render would otherwise auto-detect
+# and build instead. Node version comes from .node-version; corepack enables pnpm from
+# the repo's packageManager pin.
+#
+# Render's free tier has no pre-deploy command, so migrations — the Procfile
+# `release: pnpm db:migrate:deploy` step — are appended to the build command: they
+# run before the new instance goes live, but on every deploy including failed ones.
+# The manual alternative and this trade-off are documented in RUNBOOK.md section 13.
+#
+# All secrets are `sync: false` — enter them once in the Render dashboard (or via
+# the Render CLI) at first sync. NEVER commit real values here: public repo.
+
+services:
+  - type: web
+    name: solarsim
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: pnpm install --frozen-lockfile && pnpm build && pnpm db:migrate:deploy
+    startCommand: pnpm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # DATABASE_URL / DIRECT_URL point at Neon — NOT a Render Postgres, which
+      # expires 30 days after creation on the free tier. Both URLs need
+      # `&connect_timeout=15&pool_timeout=20` appended (see RUNBOOK.md section 3.2).
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: R2_ACCOUNT_ID
+        sync: false
+      - key: R2_ACCESS_KEY_ID
+        sync: false
+      - key: R2_SECRET_ACCESS_KEY
+        sync: false
+      - key: R2_BUCKET
+        sync: false
+      - key: BETTER_AUTH_SECRET
+        sync: false
+      - key: BETTER_AUTH_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: GOOGLE_OAUTH_CLIENT_ID
+        sync: false
+      - key: GOOGLE_OAUTH_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: PDF_TOKEN_SECRET
+        sync: false
+      - key: PDF_EXPORT_URL
+        sync: false
+      # Chat: GEMINI_API_KEY alone satisfies the boot check; GOOGLE_CLOUD_PROJECT
+      # is the Vertex AI path instead. env.ts requires at least one of the two.
+      - key: GEMINI_API_KEY
+        sync: false
+      # Build-time frontend values — Vite bakes them into the SPA bundle.
+      - key: VITE_GOOGLE_API_KEY
+        sync: false
+      - key: VITE_PDF_EXPORT_URL
+        sync: false
