@@ -44,7 +44,13 @@ _Search a roof. Tweak the layout. Get a NEM-accurate savings report. As easy as 
 > SolarSim is an **assessment** tool. It produces an estimate report, not a quotation, not a contract, and not an installation order. Final pricing and feasibility always come from a licensed Malaysian installer.
 
 > [!WARNING]
-> **The live deployment is currently offline.** The database has moved to Neon; the remaining hosting cutover for `solarsim.tech` is still in progress. Everything below describes the product — clone it and run the local quickstart to see it working.
+> **The live deployment is currently offline.** The database has moved to Neon; the remaining hosting cutover for `solarsim.tech` is still in progress. Everything below describes the product — clone it and run the local quickstart to see it working. Progress is tracked in the [v1.1 — Back Online](https://github.com/AlaskanTuna/SolarSim/milestone/1) milestone.
+
+## Walkthrough
+
+https://github.com/AlaskanTuna/SolarSim/releases/download/v1.1-walkthrough/solarsim-walkthrough.mp4
+
+The three-page flow: **Map** (search a roof, one Solar API call, cached forever) → **Workbench** (drag, rotate, and delete panels on a Konva canvas, with flux resampled locally) → **Analysis** (NEM Rakyat 3.0 billing simulation and PDF export).
 
 ---
 
