@@ -19,6 +19,7 @@ import { requestPdfExportToken } from '@/api/projects'
 import { notify } from '@/components/ui/toastConfig'
 import { useTheme } from '@/hooks/useTheme'
 import { useLocale } from '@/hooks/useLocale'
+import { useTranslation } from 'react-i18next'
 
 /** Strips characters that would break a download filename across OSes. */
 function sanitizeFileName(value: string) {
@@ -52,6 +53,7 @@ function triggerDownload(blob: Blob, filename: string) {
  * runs the full export flow described in the file header.
  */
 export function useAnalysisPdf() {
+  const { t } = useTranslation('analysis')
   const [isExporting, setIsExporting] = useState(false)
   const { resolved: resolvedTheme } = useTheme()
   const { locale } = useLocale()
@@ -59,7 +61,7 @@ export function useAnalysisPdf() {
   async function handleExportPdf(projectId: string, projectName: string, beforeExport?: () => Promise<void>) {
     const exportUrl = import.meta.env.VITE_PDF_EXPORT_URL
     if (!exportUrl) {
-      notify.error('PDF export service is not configured')
+      notify.error(t('toasts.pdfServiceNotConfigured'))
       return
     }
 
@@ -98,7 +100,7 @@ export function useAnalysisPdf() {
 
       const blob = await response.blob()
       triggerDownload(blob, filename)
-      notify.success(`PDF exported: ${filename}`)
+      notify.success(t('toasts.pdfExported', { filename }))
     } catch (error) {
       notify.error(error instanceof Error ? error.message : 'Failed to export the PDF report')
     } finally {

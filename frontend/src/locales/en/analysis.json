@@ -465,5 +465,9 @@
     "creditForfeiture": "Excess credits are forfeited at the end of each calendar year. No cash payment is made for unused credits.",
     "systemCost": "System cost is estimated bottom-up: distributor panel pricing + inverter SKU lookup + roof-type-dependent mounting + electrical BOS + permits + labour markup + installer margin. Assumes mid-tier installer pricing and single-storey installation. Typical Malaysian turnkey quotes land within ±10% of this figure. Always confirm with a licensed SEDA-registered installer.",
     "paybackProjections": "Payback and savings projections do not account for annual maintenance (around RM 500/yr) or inverter replacement (typically needed at year 10 to 15, costing around RM 3,000 to 6,000). Tariff escalation can be configured in Advanced view (default 0%). RP4 revisions in Malaysia have historically trended around 3 to 5% per year. Actual long-term returns may differ."
+  },
+  "toasts": {
+    "pdfServiceNotConfigured": "PDF export service is not configured",
+    "pdfExported": "PDF exported: {{filename}}"
   }
 }

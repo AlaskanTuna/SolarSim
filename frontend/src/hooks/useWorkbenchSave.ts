@@ -19,6 +19,7 @@ import { recomputeFluxBatch } from '@/api/locations'
 import { saveLayout } from '@/api/projects'
 import { notify } from '@/components/ui/toastConfig'
 import type { PanelEdit, PanelModel } from '@shared/types'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Inputs to `useWorkbenchSave`.
@@ -53,6 +54,7 @@ export function useWorkbenchSave({
   serializeLayout,
   updatePanelEnergy
 }: UseWorkbenchSaveOptions) {
+  const { t } = useTranslation('workbench')
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [isSaving, setIsSaving] = useState(false)
@@ -68,7 +70,7 @@ export function useWorkbenchSave({
       const serializedLayout = serializeLayout()
       const activePanels = serializedLayout.filter((panel) => panel.status !== 'deleted')
 
-      notify.info(`Recomputing monthly energy for ${activePanels.length} active panels before saving...`)
+      notify.info(t('toasts.recomputingBeforeSave', { count: activePanels.length }))
 
       const batchResponse = await recomputeFluxBatch(locationId, {
         panels: activePanels.map((panel) => ({
@@ -101,7 +103,7 @@ export function useWorkbenchSave({
       })
 
       setIsBatchRecomputing(false)
-      notify.info('Saving the refreshed layout to your project...')
+      notify.info(t('toasts.savingLayout'))
       const updatedProject = await saveLayout(projectId, { editedLayout: nextLayout, selectedPanelModelId })
       queryClient.setQueryData(['project', projectId], updatedProject)
       navigate(`/project/${projectId}/analysis`)

@@ -217,5 +217,18 @@
     "step5Body": "Happy with the layout? Click \"Save & Continue\" to move on to the savings analysis. You can always come back to adjust.",
     "step6Title": "Meet Sol",
     "step6Body": "Stuck or curious? Tap Sol, your friendly solar guide, to ask anything about this layout, your savings, NEM credits, or how solar works in Malaysia."
+  },
+  "toasts": {
+    "recomputingPanelYield": "Recomputing panel yield from cached monthly flux data...",
+    "groupMoveFailed": "Group move failed: {{reason}}",
+    "recomputingPanels": "Recomputing yield for {{count}} panels...",
+    "groupMoveRecomputeFailed": "Failed to recompute group move. Positions reverted.",
+    "recalculatingDimensions": "Recalculating energy for new panel dimensions...",
+    "recomputingBeforeSave": "Recomputing monthly energy for {{count}} active panels before saving...",
+    "savingLayout": "Saving the refreshed layout to your project...",
+    "overlayLoadFailed": "Failed to load {{mode}} overlay",
+    "placementMask": "That placement leaves the detected roof boundary.",
+    "placementOverlap": "That placement overlaps another panel.",
+    "placementBounds": "That placement leaves the roof image bounds."
   }
 }

@@ -465,5 +465,9 @@
     "creditForfeiture": "Kredit berlebihan dilucutkan pada akhir setiap tahun kalendar. Tiada bayaran tunai dibuat untuk kredit yang tidak digunakan.",
     "systemCost": "Kos sistem dianggarkan secara bawah ke atas: harga panel pengedar + carian SKU penyongsang + pemasangan bergantung pada jenis bumbung + BOS elektrik + permit + markup buruh + margin pemasang. Menganggap harga pemasang peringkat pertengahan dan pemasangan satu tingkat. Sebut harga turnkey Malaysia yang biasa jatuh dalam julat ±10% daripada angka ini. Sentiasa sahkan dengan pemasang berlesen yang berdaftar dengan SEDA.",
     "paybackProjections": "Unjuran bayar balik dan penjimatan tidak mengambil kira penyelenggaraan tahunan (sekitar RM 500/thn) atau penggantian penyongsang (biasanya diperlukan pada tahun 10 hingga 15, kos sekitar RM 3,000 hingga 6,000). Eskalasi tarif boleh dikonfigurasi dalam paparan Lanjutan (lalai 0%). Semakan RP4 di Malaysia secara sejarah cenderung sekitar 3 hingga 5% setahun. Pulangan jangka panjang sebenar mungkin berbeza."
+  },
+  "toasts": {
+    "pdfServiceNotConfigured": "Perkhidmatan eksport PDF belum dikonfigurasikan",
+    "pdfExported": "PDF dieksport: {{filename}}"
   }
 }

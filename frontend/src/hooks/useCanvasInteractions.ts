@@ -54,15 +54,17 @@ import type { WorkbenchPanelState } from '@/hooks/usePanelState'
 import { computeSegmentHulls } from '@/lib/segmentVisualization'
 import type { SolarPanel, RoofSegment } from '@/lib/buildingInsights'
 import { PANEL_MODELS, getPanelModel, type PanelModel } from '@shared/types'
+import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
 
-function getPlacementErrorMessage(reason: 'bounds' | 'mask' | 'overlap') {
+function getPlacementErrorMessage(t: TFunction, reason: 'bounds' | 'mask' | 'overlap') {
   switch (reason) {
     case 'mask':
-      return 'That placement leaves the detected roof boundary.'
+      return t('toasts.placementMask')
     case 'overlap':
-      return 'That placement overlaps another panel.'
+      return t('toasts.placementOverlap')
     default:
-      return 'That placement leaves the roof image bounds.'
+      return t('toasts.placementBounds')
   }
 }
 
@@ -122,6 +124,7 @@ export function useCanvasInteractions({
   solarPanels,
   roofSegments
 }: UseCanvasInteractionsOptions) {
+  const { t } = useTranslation('workbench')
   const rotationTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const groupRotateStateRef = useRef<{
     snapshots: Map<string, { centerPx: { x: number; y: number }; rotation: number }>
@@ -283,7 +286,7 @@ export function useCanvasInteractions({
     if (!locationId) return
 
     setPendingPanelId(panelId)
-    notify.info('Recomputing panel yield from cached monthly flux data...')
+    notify.info(t('toasts.recomputingPanelYield'))
 
     try {
       const result = await recomputeFlux(locationId, {
@@ -491,7 +494,7 @@ export function useCanvasInteractions({
       // Bounds and mask failures still revert because they are real boundary violations
       if (placementError && (!enteredViaOverlap || (placementError !== 'overlap' && placementError !== 'bounds'))) {
         resetPosition()
-        notify.error(getPlacementErrorMessage(placementError))
+        notify.error(getPlacementErrorMessage(t, placementError))
         return
       }
 
@@ -604,7 +607,7 @@ export function useCanvasInteractions({
           }))
         )
         resetPosition()
-        notify.error(`Group move failed: ${getPlacementErrorMessage(placementError)}`)
+        notify.error(t('toasts.groupMoveFailed', { reason: getPlacementErrorMessage(t, placementError) }))
         return
       }
       moves.push({ id: sp.id, prevCenter, nextCenter })
@@ -615,7 +618,7 @@ export function useCanvasInteractions({
 
     if (!locationId) return
     setPendingPanelId(panelId)
-    notify.info(`Recomputing yield for ${moves.length} panels...`)
+    notify.info(t('toasts.recomputingPanels', { count: moves.length }))
 
     try {
       const batchResponse = await recomputeFluxBatch(locationId, {
@@ -640,7 +643,7 @@ export function useCanvasInteractions({
     } catch {
       bulkUpdatePanels(moves.map((mv) => ({ id: mv.id, center: mv.prevCenter })))
       resetPosition()
-      notify.error('Failed to recompute group move. Positions reverted.')
+      notify.error(t('toasts.groupMoveRecomputeFailed'))
     } finally {
       setPendingPanelId(null)
     }
@@ -675,7 +678,7 @@ export function useCanvasInteractions({
     // Bounds and mask still toast because they are real boundary violations
     if (placementError === 'overlap') return
     if (placementError) {
-      notify.error(getPlacementErrorMessage(placementError))
+      notify.error(getPlacementErrorMessage(t, placementError))
       return
     }
 
@@ -796,7 +799,7 @@ export function useCanvasInteractions({
     if (!locationId || visiblePanels.length === 0) return
 
     setIsModelRecomputing(true)
-    notify.info('Recalculating energy for new panel dimensions...')
+    notify.info(t('toasts.recalculatingDimensions'))
 
     const nextModel = getPanelModel(nextModelId) ?? PANEL_MODELS[1]!
 
